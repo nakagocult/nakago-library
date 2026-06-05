@@ -1,5 +1,8 @@
 'use client';
 
+import CountUp from 'react-countup';
+import { motion } from 'framer-motion';
+
 interface MintProgressProps {
   claimed: number;
   total: number;
@@ -14,30 +17,51 @@ export default function MintProgress({ claimed, total, rareBois, accent, loading
 
   return (
     <div>
-      <div className="mb-3 flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/35">Minted</p>
-          <p className="mt-1 text-3xl font-black text-white">
-            {loading ? '...' : claimed.toLocaleString()}
-            <span className="text-base font-semibold text-white/35"> / {total.toLocaleString()}</span>
-          </p>
+      <div className="mb-2 flex items-end justify-between">
+        <div className="flex items-baseline gap-1.5">
+          <span
+            className="text-4xl font-black leading-none"
+            style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: accent[0] }}
+          >
+            {loading ? '—' : <CountUp end={claimed} duration={1.4} separator="," preserveValue />}
+          </span>
+          <span className="text-lg font-bold text-white/35" style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}>
+            / {total} claimed
+          </span>
         </div>
-        <p className="text-right text-sm font-bold text-white/45">
-          {loading ? 'Reading chain...' : `${remaining.toLocaleString()} left`}
-        </p>
+        <span className="text-xs font-bold uppercase tracking-[0.15em] text-white/40">
+          {loading ? 'reading chain…' : `${remaining} left`}
+        </span>
       </div>
 
-      <div className="h-2 overflow-hidden rounded-full bg-white/10">
-        <div
+      <div className="h-2.5 w-full overflow-hidden rounded-full" style={{ background: 'rgba(255,255,255,0.07)' }}>
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           className="h-full rounded-full"
           style={{
-            width: `${pct}%`,
             background: `linear-gradient(90deg, ${accent[0]}, ${accent[1]})`,
+            boxShadow: `0 0 16px ${accent[0]}80`,
           }}
         />
       </div>
 
-      <p className="mt-3 text-xs text-white/40">{rareBois} rare tier tokens in this drop.</p>
+      <div className="mt-3 flex items-center gap-2">
+        <span
+          className="rounded-full px-2.5 py-1 text-[11px] font-black tracking-wide"
+          style={{
+            background: `${accent[1]}1a`,
+            border: `1px solid ${accent[1]}40`,
+            color: accent[1],
+            fontFamily: 'Bebas Neue, Impact, sans-serif',
+            letterSpacing: '0.1em',
+          }}
+        >
+          {rareBois} RARE BOIS
+        </span>
+        <span className="text-[11px] text-white/30">scarce tier · randomized order</span>
+      </div>
     </div>
   );
 }
