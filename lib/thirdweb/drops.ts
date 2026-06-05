@@ -55,12 +55,5 @@ export const DROPS: Record<DropSlug, DropConfig> = {
   'founder-pass': FOUNDER_PASS,
 };
 
-/** Randomized-order proof for the Founder Pass, surfaced in the Provably Fair panel. */
-export const FOUNDER_FAIRNESS_HASH =
-  'C0CBC9835113AE85321C910CA90954865620964485217AA57826AE7D27DD4EF4';
-
-/** Production art for the Founder Pass. The host is allowlisted in next.config. */
-export const FOUNDER_PASS_ART = 'https://i.ibb.co/3YymJb6D/IMG-0680.jpg';
-
 /** The native currency sentinel thirdweb returns for ETH-priced claim conditions. */
 export const NATIVE_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
