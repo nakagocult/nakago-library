@@ -10,6 +10,25 @@ import type { DropConfig } from '@/lib/thirdweb/drops';
 import { useDropStats } from '@/lib/thirdweb/useDropStats';
 import { auroraTheme } from './auroraTheme';
 import SuccessBurst from './SuccessBurst';
+import MintReveal from './MintReveal';
+
+// ERC-721 Transfer(address,address,uint256) topic
+const TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+const ZERO_PAD = '0x0000000000000000000000000000000000000000000000000000000000000000';
+
+function parseMintedIds(
+  logs: readonly { topics: readonly string[]; address: string }[],
+  contractAddress: string,
+): number[] {
+  return logs
+    .filter(
+      (log) =>
+        log.address.toLowerCase() === contractAddress.toLowerCase() &&
+        log.topics[0] === TRANSFER_TOPIC &&
+        log.topics[1] === ZERO_PAD,
+    )
+    .map((log) => Number(BigInt(log.topics[3])));
+}
 
 type Status = 'idle' | 'pending' | 'success' | 'error';
 
@@ -24,6 +43,7 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
   const [quantity, setQuantity] = useState(1);
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [mintedIds, setMintedIds] = useState<number[]>([]);
 
   const soldOut = !stats.loading && stats.claimed >= stats.total;
   const totalLabel =
@@ -107,8 +127,12 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
             onClick={() => {
               setStatus('pending');
               setErrorMsg('');
+              setMintedIds([]);
             }}
-            onTransactionConfirmed={() => setStatus('success')}
+            onTransactionConfirmed={(receipt) => {
+              setStatus('success');
+              setMintedIds(parseMintedIds(receipt.logs, drop.contract.address));
+            }}
             onError={(err) => {
               setStatus('error');
               setErrorMsg(humanizeError(err.message));
@@ -130,9 +154,12 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
       {/* Status messages */}
       <AnimatePresence mode="wait">
         {status === 'success' && (
-          <StatusNote key="ok" tone="ok">
-            <CheckCircle2 className="h-4 w-4" /> Mint confirmed — welcome to the swarm.
-          </StatusNote>
+          <>
+            <StatusNote key="ok" tone="ok">
+              <CheckCircle2 className="h-4 w-4" /> Mint confirmed — welcome to the swarm.
+            </StatusNote>
+            <MintReveal drop={drop} tokenIds={mintedIds} />
+          </>
         )}
         {status === 'error' && (
           <StatusNote key="err" tone="err">
