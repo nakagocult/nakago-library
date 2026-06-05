@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Image as ImageIcon, Cookie, Sword, Ticket, Music, User, BookOpen, Wallet, Vault, Gem } from 'lucide-react';
+import { Menu, X, Wallet, Gem } from 'lucide-react';
 import { SOCIAL_LINKS } from '@/lib/utils/constants';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -22,24 +22,11 @@ const XIcon = () => (
   </svg>
 );
 
-const navLinks = [
-  { label: 'About', href: '#about' },
-  { label: 'History', href: '#history' },
-  { label: 'Tokenomics', href: '#tokenomics' },
-  { label: 'Community', href: '#community' },
-];
+// Site temporarily simplified to the Claim hub only — nav links removed.
+// Restore the entries below to bring back full-site navigation.
+const navLinks: { label: string; href: string }[] = [];
 
-const appLinks = [
-  { label: 'Claim',     href: '/claim',     icon: Gem },
-  { label: 'Gallery',   href: '/gallery',   icon: ImageIcon },
-  { label: 'Cookies',   href: '/cookies',   icon: Cookie },
-  { label: 'M4nga',     href: '/m4nga',     icon: Sword },
-  { label: 'Vault',     href: '/vault',     icon: Vault },
-  { label: 'Lottery',   href: '/lottery',   icon: Ticket },
-  { label: 'Ddergo',    href: '/ddergo',    icon: Music },
-  { label: 'PFP',       href: '/pfp',       icon: User },
-  { label: 'Lore Lab',  href: '/lore-lab',  icon: BookOpen },
-];
+const appLinks: { label: string; href: string; icon: typeof Gem }[] = [];
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -119,7 +106,7 @@ export default function Header() {
               {link.label}
             </a>
           ))}
-          <div className="w-px h-4 bg-white/20" />
+          {navLinks.length > 0 && appLinks.length > 0 && <div className="w-px h-4 bg-white/20" />}
           {appLinks.map((link) => {
             const Icon = link.icon;
             return (
@@ -222,7 +209,7 @@ export default function Header() {
             className="lg:hidden bg-[#0a0a0a]/98 backdrop-blur-xl border-t border-white/10"
           >
             <div className="container mx-auto px-4 py-6 flex flex-col gap-1">
-              <p className="text-white/30 text-xs uppercase tracking-widest mb-1">Main</p>
+              {navLinks.length > 0 && <p className="text-white/30 text-xs uppercase tracking-widest mb-1">Main</p>}
               {navLinks.map((link) => (
                 <a
                   key={link.href}
@@ -233,7 +220,7 @@ export default function Header() {
                   {link.label}
                 </a>
               ))}
-              <p className="text-white/30 text-xs uppercase tracking-widest mt-4 mb-1">Tools</p>
+              {appLinks.length > 0 && <p className="text-white/30 text-xs uppercase tracking-widest mt-4 mb-1">Tools</p>}
               {appLinks.map((link) => {
                 const Icon = link.icon;
                 return (

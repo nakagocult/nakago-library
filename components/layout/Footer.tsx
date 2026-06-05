@@ -40,19 +40,13 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Links */}
+          {/* Links — temporarily reduced to the Claim hub only.
+              Restore the full list below to bring back site navigation. */}
           <div>
             <h3 className="text-white font-bold mb-4 text-sm uppercase tracking-widest">Navigate</h3>
             <ul className="space-y-2">
               {[
-                { label: 'About', href: '#about' },
-                { label: 'Tokenomics', href: '#tokenomics' },
-                { label: 'Community', href: '#community' },
-                { label: 'Cookies', href: '/cookies' },
-                { label: 'Lottery', href: '/lottery' },
-                { label: 'M4nga SBT', href: '/m4nga' },
-                { label: 'Ddergo Records', href: '/ddergo' },
-                { label: 'Lore Lab', href: '/lore-lab' },
+                { label: 'Claim the Drops', href: '/claim' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link

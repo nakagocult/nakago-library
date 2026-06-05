@@ -1,8 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Gem } from 'lucide-react';
+import { Gem } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Reveal from '@/components/shared/Reveal';
@@ -14,16 +13,6 @@ export default function ClaimHubPage() {
     <div className="min-h-screen">
       <Header />
       <div className="container mx-auto max-w-5xl px-4 py-28">
-        <Link href="/">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="group mb-12 inline-flex items-center gap-2 text-white/40 transition-colors hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> Home
-          </motion.div>
-        </Link>
-
         <Reveal>
           <div className="mb-14 text-center">
             <motion.div
