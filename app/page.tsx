@@ -127,7 +127,7 @@ const LINEAGE = [
   { word: 'Colere', def: 'to tend to a field of crops' },
   { word: 'Cultivate', def: 'to acquire or develop skills or habits' },
   { word: 'Culture', def: 'the collective habits and rituals of a group' },
-  { word: 'Cult', def: 'a group where the development of specific habits and rituals is tended to in a focused, concentrated, intentional manner' },
+  { word: 'Cult', def: 'a group where the development of specific habits and rituals is tended to in a focused, concentrated, and intentional manner' },
 ];
 
 function MintDrop({ drop, maxPerTx, badge, cardImage }: { drop: DropConfig; maxPerTx: number; badge: string; cardImage: string }) {
