@@ -29,7 +29,7 @@ export default function MintPage() {
 
         <span
           className="block text-xs font-black uppercase tracking-[0.35em] text-[#FF4D00]"
-          style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif' }}
+          style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
         >
           Mint · Ethereum
         </span>
@@ -108,7 +108,7 @@ function MintDrop({ drop, maxPerTx, badge, cardImage }: { drop: DropConfig; maxP
       <div className="p-6 pb-4">
         <h2
           className="text-3xl font-black leading-tight text-white"
-          style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
+          style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
         >
           {drop.title}
         </h2>

@@ -72,7 +72,7 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
           <p className="text-[11px] uppercase tracking-[0.2em] text-white/40">Price</p>
           <p
             className="text-3xl font-black leading-tight"
-            style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', color: '#fff' }}
+            style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: '#fff' }}
           >
             {stats.priceLabel ?? '—'}
             <span className="ml-1 text-sm font-bold text-white/35">/ each</span>
@@ -89,7 +89,7 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
             <Minus className="h-4 w-4" />
           </QtyBtn>
           <div className="text-center">
-            <span className="text-2xl font-black text-white" style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif' }}>
+            <span className="text-2xl font-black text-white" style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}>
               {quantity}
             </span>
             {totalLabel && <p className="text-[11px] text-white/40">{totalLabel} total</p>}
