@@ -66,8 +66,8 @@ export default function MintPage() {
         transition={{ delay: 0.4 }}
         className="mt-10 text-center text-xs leading-relaxed text-white/30"
       >
-        Connect any of 500+ wallets. All mint funds route to the NakaLabs multisig to fund
-        development, infrastructure, and future bootstraps.
+        Connect any of 500+ wallets. All mint funds route to the Naka Go Cult multisig to fund
+        development, infrastructure, buybacks, and future bootstraps.
       </motion.p>
 
       {/* Word lineage */}
