@@ -69,9 +69,47 @@ export default function MintPage() {
         Connect any of 500+ wallets. All mint funds route to the NakaLabs multisig to fund
         development, infrastructure, and future bootstraps.
       </motion.p>
+
+      {/* Word lineage */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.6 }}
+        className="mx-auto mt-16 max-w-2xl"
+      >
+        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,77,0,0.25), transparent)' }} />
+        <div className="mt-8 flex flex-col items-center gap-5 sm:flex-row sm:items-stretch sm:justify-between sm:gap-3">
+          {LINEAGE.map((entry, i) => (
+            <div key={entry.word} className="flex flex-1 items-start gap-3 sm:flex-col sm:items-center sm:text-center">
+              <span
+                className="text-xl font-black leading-none sm:text-2xl"
+                style={{
+                  fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif',
+                  letterSpacing: '0.06em',
+                  color: i === LINEAGE.length - 1 ? '#FF4D00' : 'rgba(255,255,255,0.55)',
+                  textShadow: i === LINEAGE.length - 1 ? '0 0 24px rgba(255,77,0,0.5)' : 'none',
+                }}
+              >
+                {entry.word}
+              </span>
+              <p className="max-w-[14rem] text-[11px] leading-relaxed text-white/30 sm:mt-1">
+                {entry.def}
+              </p>
+            </div>
+          ))}
+        </div>
+      </motion.div>
     </main>
   );
 }
+
+const LINEAGE = [
+  { word: 'Colere', def: 'to tend to a field of crops' },
+  { word: 'Cultivate', def: 'to acquire or develop skills or habits' },
+  { word: 'Culture', def: 'the collective habits and rituals of a group' },
+  { word: 'Cult', def: 'a group where the development of specific habits and rituals is tended to in a focused, concentrated, intentional manner' },
+];
 
 function MintDrop({ drop, maxPerTx, badge, cardImage }: { drop: DropConfig; maxPerTx: number; badge: string; cardImage: string }) {
   const stats = useDropStats(drop);
