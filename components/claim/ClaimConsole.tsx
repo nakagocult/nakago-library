@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Minus, Plus, Loader2, CheckCircle2, AlertTriangle, Wallet } from 'lucide-react';
-import { ConnectButton, ClaimButton, useActiveAccount } from 'thirdweb/react';
+import { ClaimButton } from 'thirdweb/react';
 import { toEther } from 'thirdweb';
+import { useAccount } from 'wagmi';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { client, chain } from '@/lib/thirdweb/client';
 import type { DropConfig } from '@/lib/thirdweb/drops';
 import { useDropStats } from '@/lib/thirdweb/useDropStats';
-import { auroraTheme } from './auroraTheme';
 import SuccessBurst from './SuccessBurst';
 import MintReveal from './MintReveal';
 
@@ -38,7 +39,7 @@ interface ClaimConsoleProps {
 }
 
 export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
-  const account = useActiveAccount();
+  const { address } = useAccount();
   const stats = useDropStats(drop);
   const [quantity, setQuantity] = useState(1);
   const [status, setStatus] = useState<Status>('idle');
@@ -71,7 +72,7 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
           <p className="text-[11px] uppercase tracking-[0.2em] text-white/40">Price</p>
           <p
             className="text-3xl font-black leading-tight"
-            style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: '#fff' }}
+            style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', color: '#fff' }}
           >
             {stats.priceLabel ?? '—'}
             <span className="ml-1 text-sm font-bold text-white/35">/ each</span>
@@ -88,7 +89,7 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
             <Minus className="h-4 w-4" />
           </QtyBtn>
           <div className="text-center">
-            <span className="text-2xl font-black text-white" style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}>
+            <span className="text-2xl font-black text-white" style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif' }}>
               {quantity}
             </span>
             {totalLabel && <p className="text-[11px] text-white/40">{totalLabel} total</p>}
@@ -106,14 +107,9 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
           <div className="rounded-2xl py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-white/50" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
             Fully Claimed
           </div>
-        ) : !account ? (
+        ) : !address ? (
           <div className="claim-connect flex justify-center">
-            <ConnectButton
-              client={client}
-              chain={chain}
-              theme={auroraTheme}
-              connectButton={{ label: 'Connect Wallet to Claim' }}
-            />
+            <ConnectButton label="Connect Wallet to Claim" />
           </div>
         ) : (
           <ClaimButton
@@ -168,9 +164,9 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
         )}
       </AnimatePresence>
 
-      {account && (
+      {address && (
         <p className="mt-3 text-center text-[10px] text-white/25">
-          Connected {account.address.slice(0, 6)}…{account.address.slice(-4)}
+          Connected {address.slice(0, 6)}…{address.slice(-4)}
         </p>
       )}
     </div>

@@ -1,7 +1,40 @@
 'use client';
 
+import '@rainbow-me/rainbowkit/styles.css';
+import { RainbowKitProvider, getDefaultConfig, darkTheme } from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import { mainnet } from 'wagmi/chains';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ThirdwebProvider } from 'thirdweb/react';
+import { WagmiThirdwebBridge } from '@/components/shared/WagmiThirdwebBridge';
+
+const config = getDefaultConfig({
+  appName: 'Naka Cult',
+  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? 'YOUR_PROJECT_ID',
+  chains: [mainnet],
+  ssr: true,
+});
+
+const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <ThirdwebProvider>{children}</ThirdwebProvider>;
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider
+          theme={darkTheme({
+            accentColor: '#FF4D00',
+            accentColorForeground: 'white',
+            borderRadius: 'large',
+            fontStack: 'system',
+          })}
+        >
+          <ThirdwebProvider>
+            <WagmiThirdwebBridge />
+            {children}
+          </ThirdwebProvider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
 }

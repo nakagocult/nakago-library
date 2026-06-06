@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Gem } from 'lucide-react';
 import ClaimConsole from '@/components/claim/ClaimConsole';
@@ -7,9 +8,9 @@ import MintProgress from '@/components/claim/MintProgress';
 import { FOUNDER_PASS, NIPPO, type DropConfig } from '@/lib/thirdweb/drops';
 import { useDropStats } from '@/lib/thirdweb/useDropStats';
 
-const DROPS: Array<{ drop: DropConfig; maxPerTx: number; badge: string }> = [
-  { drop: NIPPO, maxPerTx: 10, badge: 'Drop 01' },
-  { drop: FOUNDER_PASS, maxPerTx: 5, badge: 'Drop 02' },
+const DROPS: Array<{ drop: DropConfig; maxPerTx: number; badge: string; cardImage: string }> = [
+  { drop: NIPPO, maxPerTx: 4, badge: 'Drop 01', cardImage: '/nfts/nippo-dossier.png' },
+  { drop: FOUNDER_PASS, maxPerTx: 4, badge: 'Drop 02', cardImage: '/nfts/naka-labs-logo.jpg' },
 ];
 
 export default function MintPage() {
@@ -28,13 +29,13 @@ export default function MintPage() {
 
         <span
           className="block text-xs font-black uppercase tracking-[0.35em] text-[#FF4D00]"
-          style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
+          style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif' }}
         >
           Mint · Ethereum
         </span>
         <h1
           className="mt-3 text-6xl font-black leading-none text-white md:text-7xl"
-          style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
+          style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
         >
           <span className="text-gradient-fire">CLAIM</span> THE DROPS
         </h1>
@@ -46,14 +47,14 @@ export default function MintPage() {
 
       {/* Drop cards */}
       <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {DROPS.map(({ drop, maxPerTx, badge }, i) => (
+        {DROPS.map(({ drop, maxPerTx, badge, cardImage }, i) => (
           <motion.div
             key={drop.slug}
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
           >
-            <MintDrop drop={drop} maxPerTx={maxPerTx} badge={badge} />
+            <MintDrop drop={drop} maxPerTx={maxPerTx} badge={badge} cardImage={cardImage} />
           </motion.div>
         ))}
       </section>
@@ -72,7 +73,7 @@ export default function MintPage() {
   );
 }
 
-function MintDrop({ drop, maxPerTx, badge }: { drop: DropConfig; maxPerTx: number; badge: string }) {
+function MintDrop({ drop, maxPerTx, badge, cardImage }: { drop: DropConfig; maxPerTx: number; badge: string; cardImage: string }) {
   const stats = useDropStats(drop);
 
   return (
@@ -80,19 +81,34 @@ function MintDrop({ drop, maxPerTx, badge }: { drop: DropConfig; maxPerTx: numbe
       className="glass-card flex flex-col overflow-hidden"
       style={{ borderColor: `${drop.accent[0]}30` }}
     >
-      {/* Drop header */}
-      <div className="p-6 pb-4">
-        <div className="mb-1 flex items-center gap-2">
+      {/* Card image */}
+      <div className="relative h-48 w-full overflow-hidden">
+        <Image
+          src={cardImage}
+          alt={drop.title}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: `linear-gradient(to top, rgba(10,10,10,0.85) 0%, transparent 60%)` }}
+        />
+        <div className="absolute bottom-3 left-4">
           <span
             className="rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest"
-            style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40`, color: drop.accent[0], fontFamily: 'Bebas Neue, Impact, sans-serif' }}
+            style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40`, color: drop.accent[0], fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', backdropFilter: 'blur(8px)' }}
           >
             {badge}
           </span>
         </div>
+      </div>
+
+      {/* Drop header */}
+      <div className="p-6 pb-4">
         <h2
-          className="mt-2 text-3xl font-black leading-tight text-white"
-          style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
+          className="text-3xl font-black leading-tight text-white"
+          style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
         >
           {drop.title}
         </h2>

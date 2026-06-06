@@ -66,7 +66,7 @@ function RevealCard({
       <div className="px-3 py-2.5">
         <p
           className="truncate text-sm font-black leading-tight text-white"
-          style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
+          style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
         >
           {label}
         </p>

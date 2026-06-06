@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Akihabored';
+  src: url('/fonts/Akihabored.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme inline {
   /* Brand Colors */
   --color-naka-orange: #FF4D00;
@@ -11,7 +19,7 @@
   --color-neon-green: #00FF88;
 
   /* Fonts */
-  --font-bebas: 'Bebas Neue', 'Impact', sans-serif;
+  --font-bebas: 'Akihabored', 'Bebas Neue', 'Impact', sans-serif;
   --font-permanent-marker: 'Permanent Marker', cursive;
   --font-inter: 'Inter', system-ui, sans-serif;
   --font-grotesk: 'Space Grotesk', system-ui, sans-serif;
@@ -107,14 +115,13 @@ body {
   background-color: #0a0a0a;
   color: white;
   scroll-behavior: smooth;
-  font-family: 'Space Grotesk', system-ui, sans-serif;
-  padding-top: 36px; /* LiveTicker height */
+  font-family: 'Noto Serif JP', serif;
 }
 
 /* Typography */
-.font-bebas { font-family: 'Bebas Neue', 'Impact', sans-serif; }
+.font-bebas { font-family: 'Akihabored', 'Bebas Neue', 'Impact', sans-serif; }
 .font-marker { font-family: 'Permanent Marker', cursive; }
-.font-grotesk { font-family: 'Space Grotesk', system-ui, sans-serif; }
+.font-grotesk { font-family: 'Noto Serif JP', serif; }
 .font-jp { font-family: 'Noto Sans JP', sans-serif; }
 
 /* Gradient text utilities */

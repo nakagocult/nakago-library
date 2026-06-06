@@ -21,11 +21,11 @@ export default function MintProgress({ claimed, total, rareBois, accent, loading
         <div className="flex items-baseline gap-1.5">
           <span
             className="text-4xl font-black leading-none"
-            style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: accent[0] }}
+            style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', color: accent[0] }}
           >
             {loading ? '—' : <CountUp end={claimed} duration={1.4} separator="," preserveValue />}
           </span>
-          <span className="text-lg font-bold text-white/35" style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}>
+          <span className="text-lg font-bold text-white/35" style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif' }}>
             / {total} claimed
           </span>
         </div>
@@ -54,7 +54,7 @@ export default function MintProgress({ claimed, total, rareBois, accent, loading
             background: `${accent[1]}1a`,
             border: `1px solid ${accent[1]}40`,
             color: accent[1],
-            fontFamily: 'Bebas Neue, Impact, sans-serif',
+            fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif',
             letterSpacing: '0.1em',
           }}
         >
