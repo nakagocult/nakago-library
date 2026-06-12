@@ -129,7 +129,7 @@ function DropCollection({ drop, owner }: { drop: DropConfig; owner: string }) {
           <p className="text-sm text-white/40">None held yet.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {tokenIds.map((id) => (
             <OwnedCard key={id} tokenId={id} slug={drop.slug} accent={drop.accent} />
           ))}
@@ -149,6 +149,9 @@ function OwnedCard({
   accent: [string, string];
 }) {
   const { label, sublabel, imgSrc } = resolveCard(slug, tokenId);
+  // NIPPO art is 3:2 landscape; Founder Pass is square. Match the frame to the
+  // source so object-cover fills it exactly without cropping.
+  const aspect = slug === 'nippo' ? 'aspect-[3/2]' : 'aspect-square';
 
   return (
     <motion.div
@@ -158,9 +161,9 @@ function OwnedCard({
       className="overflow-hidden rounded-2xl"
       style={{ border: `1px solid ${accent[0]}40`, background: 'rgba(0,0,0,0.5)' }}
     >
-      <div className="relative aspect-square w-full">
+      <div className={`relative ${aspect} w-full`}>
         {imgSrc ? (
-          <Image src={imgSrc} alt={label} fill className="object-cover" sizes="(max-width: 768px) 50vw, 220px" />
+          <Image src={imgSrc} alt={label} fill className="object-cover" sizes="(max-width: 640px) 100vw, 520px" />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-white/20">#{tokenId}</div>
         )}
