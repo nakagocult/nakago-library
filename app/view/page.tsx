@@ -32,7 +32,7 @@ export default function ViewPage() {
           className="text-5xl font-black leading-none text-white md:text-6xl"
           style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
         >
-          YOUR <span className="text-gradient-fire">COLLECTION</span>
+<span className="text-gradient-fire">HOLDINGS</span>
         </h1>
         <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-white/45">
           Everything the connected wallet holds across the Naka Go drops, read live from the
