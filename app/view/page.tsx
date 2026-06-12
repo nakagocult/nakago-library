@@ -6,7 +6,8 @@ import { Images, Loader2, Wallet } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { getOwnedTokenIds } from 'thirdweb/extensions/erc721';
+import { Insight } from 'thirdweb';
+import { client, chain } from '@/lib/thirdweb/client';
 import { NIPPO, FOUNDER_PASS, type DropConfig } from '@/lib/thirdweb/drops';
 import { resolveCard } from '@/lib/nftCard';
 
@@ -58,12 +59,22 @@ export default function ViewPage() {
 }
 
 function DropCollection({ drop, owner }: { drop: DropConfig; owner: string }) {
-  const { data: tokenIds, isLoading, isError } = useQuery({
+  const { data: tokenIds, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ['ownedTokenIds', drop.slug, owner],
     queryFn: async () => {
-      const ids = await getOwnedTokenIds({ contract: drop.contract, owner });
-      return ids.map((id) => Number(id)).sort((a, b) => a - b);
+      // Insight indexer: returns the NFTs this wallet holds for the contract.
+      // We only use the token id — name + artwork come from local nftMaps.
+      const nfts = await Insight.getOwnedNFTs({
+        client,
+        chains: [chain],
+        ownerAddress: owner,
+        contractAddresses: [drop.contract.address],
+      });
+      return nfts.map((nft) => Number(nft.id)).sort((a, b) => a - b);
     },
+    retry: 1,
+    refetchOnWindowFocus: false,
+    staleTime: 30_000,
   });
 
   return (
@@ -90,7 +101,18 @@ function DropCollection({ drop, owner }: { drop: DropConfig; owner: string }) {
           <Loader2 className="h-4 w-4 animate-spin" /> Reading your tokens…
         </div>
       ) : isError ? (
-        <p className="py-6 text-sm text-white/40">Couldn’t load this collection. Try refreshing.</p>
+        <div className="flex items-center gap-3 py-6">
+          <p className="text-sm text-white/40">Couldn’t load this collection.</p>
+          <button
+            type="button"
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-[#FF4D00] disabled:opacity-50"
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,77,0,0.25)', fontFamily: 'Bebas Neue, Impact, sans-serif' }}
+          >
+            {isFetching ? 'Retrying…' : 'Retry'}
+          </button>
+        </div>
       ) : !tokenIds || tokenIds.length === 0 ? (
         <div
           className="flex flex-col items-center gap-2 rounded-2xl py-10 text-center"

@@ -315,7 +315,8 @@ export default function IntroScreen() {
                   <div
                     className="text-5xl md:text-7xl font-black leading-none mb-2"
                     style={{
-                      fontFamily: 'Bebas Neue, Impact, sans-serif',
+                      fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif',
+                      letterSpacing: '0.04em',
                       background: 'linear-gradient(135deg, #FF4D00, #FFD700)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
