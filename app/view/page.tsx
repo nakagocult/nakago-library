@@ -59,7 +59,7 @@ export default function ViewPage() {
 }
 
 function DropCollection({ drop, owner }: { drop: DropConfig; owner: string }) {
-  const { data: tokenIds, isLoading, isError, isFetching, refetch } = useQuery({
+  const { data: tokenIds, isLoading, isError, isFetching, error, refetch } = useQuery({
     queryKey: ['ownedTokenIds', drop.slug, owner],
     queryFn: async () => {
       // Insight indexer: returns the NFTs this wallet holds for the contract.
@@ -101,17 +101,24 @@ function DropCollection({ drop, owner }: { drop: DropConfig; owner: string }) {
           <Loader2 className="h-4 w-4 animate-spin" /> Reading your tokens…
         </div>
       ) : isError ? (
-        <div className="flex items-center gap-3 py-6">
-          <p className="text-sm text-white/40">Couldn’t load this collection.</p>
-          <button
-            type="button"
-            onClick={() => refetch()}
-            disabled={isFetching}
-            className="rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-[#FF4D00] disabled:opacity-50"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,77,0,0.25)', fontFamily: 'Bebas Neue, Impact, sans-serif' }}
-          >
-            {isFetching ? 'Retrying…' : 'Retry'}
-          </button>
+        <div className="py-6">
+          <div className="flex items-center gap-3">
+            <p className="text-sm text-white/40">Couldn’t load this collection.</p>
+            <button
+              type="button"
+              onClick={() => refetch()}
+              disabled={isFetching}
+              className="rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-[#FF4D00] disabled:opacity-50"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,77,0,0.25)', fontFamily: 'Bebas Neue, Impact, sans-serif' }}
+            >
+              {isFetching ? 'Retrying…' : 'Retry'}
+            </button>
+          </div>
+          {error instanceof Error && (
+            <p className="mt-2 max-w-lg break-words text-[11px] leading-relaxed text-white/25">
+              {error.message}
+            </p>
+          )}
         </div>
       ) : !tokenIds || tokenIds.length === 0 ? (
         <div

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { MASCOT_URL, SOCIAL_LINKS } from '@/lib/site';
 import CopyAddress from '@/components/shared/CopyAddress';
 
@@ -118,8 +119,14 @@ export default function NavBar() {
           <PrimaryFeatures />
         </div>
 
-        {/* Menu */}
-        <div className="relative">
+        {/* Right side: wallet + menu */}
+        <div className="flex items-center gap-2">
+          <div className="shrink-0">
+            <ConnectButton accountStatus="address" chainStatus="none" showBalance={false} />
+          </div>
+
+          {/* Menu */}
+          <div className="relative">
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
@@ -178,6 +185,7 @@ export default function NavBar() {
               </>
             )}
           </AnimatePresence>
+          </div>
         </div>
       </div>
 
