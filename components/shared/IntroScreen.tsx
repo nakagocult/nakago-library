@@ -3,11 +3,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Durations are paced to each phase's reading load — short beats for the
+// symbol/year/tagline, a long hold for the dense story paragraph. Each value
+// already accounts for the entrance-animation delay before its text is visible.
 const PHASES = [
   { id: 'kanji', duration: 1800 },
-  { id: 'year', duration: 1500 },
-  { id: 'tagline', duration: 2000 },
-  { id: 'story', duration: 2500 },
+  { id: 'year', duration: 2000 },
+  { id: 'tagline', duration: 2400 },
+  { id: 'story', duration: 3600 },
   { id: 'enter', duration: 99999 },
 ];
 
@@ -263,11 +266,11 @@ export default function IntroScreen() {
                 </motion.div>
                 <motion.p
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.5 }}
+                  animate={{ opacity: 0.65 }}
                   transition={{ delay: 0.7 }}
-                  className="text-white text-sm leading-relaxed max-w-sm mx-auto"
+                  className="text-white text-base leading-relaxed max-w-sm mx-auto"
                 >
-                  80% of all modern Shiba Inus trace their lineage to one dog. Born 1948. Akaishi line. The $NAKA token honors that legacy.
+                  80% of every Shiba alive carries his bloodline.
                 </motion.p>
               </motion.div>
             )}

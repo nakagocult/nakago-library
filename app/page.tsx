@@ -80,9 +80,9 @@ export default function HomePage() {
           transition={{ duration: 0.8, delay: 0.65 }}
           className="mt-6 max-w-xl text-base leading-relaxed text-white/60 md:text-lg"
         >
-          Born 1948. Guardian of the breed — his bloodline still runs through{' '}
-          <span className="font-semibold text-[#FF4D00]">80%</span> of modern Shiba Inus. The
-          drops below carry that legacy on-chain.
+          Born 1948 of the Akaishi line. Guardian of the breed — his bloodline still runs
+          through <span className="font-semibold text-[#FF4D00]">80%</span> of modern Shiba
+          Inus, and the $NAKA token honors that legacy on-chain.
         </motion.p>
 
         {/* CTAs */}
