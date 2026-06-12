@@ -39,6 +39,9 @@ function RevealCard({
   index: number;
 }) {
   const { label, sublabel, imgSrc } = resolveCard(slug, tokenId);
+  // NIPPO art is 3:2 landscape; Founder Pass is square. Match the frame so
+  // object-cover fills it without cropping.
+  const aspect = slug === 'nippo' ? 'aspect-[3/2]' : 'aspect-square';
 
   return (
     <motion.div
@@ -48,14 +51,18 @@ function RevealCard({
       className="overflow-hidden rounded-2xl"
       style={{ border: `1px solid ${accent[0]}40`, background: 'rgba(0,0,0,0.5)' }}
     >
-      <div className="relative aspect-square w-full">
-        <Image
-          src={imgSrc}
-          alt={label}
-          fill
-          className="object-cover"
-          sizes="(max-width: 640px) 50vw, 280px"
-        />
+      <div className={`relative ${aspect} w-full`}>
+        {imgSrc ? (
+          <Image
+            src={imgSrc}
+            alt={label}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 50vw, 280px"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-white/20">#{tokenId}</div>
+        )}
         {/* Accent glow overlay */}
         <div
           className="absolute inset-0"
