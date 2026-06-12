@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import { fpTier, fpImg, NIPPO_MAP, type NippoMeta } from '@/lib/nftMaps';
+import { motion } from 'framer-motion';
+import { resolveCard } from '@/lib/nftCard';
 import type { DropConfig, DropSlug } from '@/lib/thirdweb/drops';
 
 interface MintRevealProps {
@@ -79,24 +79,3 @@ function RevealCard({
   );
 }
 
-function resolveCard(slug: DropSlug, tokenId: number): { label: string; sublabel: string; imgSrc: string } {
-  if (slug === 'founder-pass') {
-    const tier = fpTier(tokenId);
-    return {
-      label: tier === '12-month' ? '12-Month Pass' : '6-Month Pass',
-      sublabel: tier === '12-month' ? 'Rare tier · Founder perks' : 'Founder perks',
-      imgSrc: fpImg(tokenId),
-    };
-  }
-
-  const entry: NippoMeta | undefined = NIPPO_MAP[tokenId];
-  if (entry) {
-    return {
-      label: entry.name,
-      sublabel: `${entry.lineage} · ${entry.rarity}`,
-      imgSrc: entry.img,
-    };
-  }
-
-  return { label: `Token #${tokenId}`, sublabel: '', imgSrc: '' };
-}

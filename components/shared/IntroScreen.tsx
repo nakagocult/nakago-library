@@ -117,7 +117,7 @@ export default function IntroScreen() {
                   animate={{ filter: ['drop-shadow(0 0 10px #FFD700)', 'drop-shadow(0 0 40px #FF4D00)', 'drop-shadow(0 0 10px #FFD700)'] }}
                   transition={{ duration: 2, repeat: Infinity }}
                   className="text-[120px] leading-none font-bold"
-                  style={{ fontFamily: 'Noto Sans JP, sans-serif', color: '#FFD700' }}
+                  style={{ fontFamily: "'Noto Serif JP', serif", color: '#FFD700' }}
                 >
                   中号
                 </motion.div>
@@ -248,7 +248,7 @@ export default function IntroScreen() {
                   className="text-2xl md:text-3xl font-black leading-tight"
                   style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: 'white' }}
                 >
-                  He survived a world war.
+                  Guardian of the breed.
                   <br />
                   <span
                     style={{
@@ -258,7 +258,7 @@ export default function IntroScreen() {
                       backgroundClip: 'text',
                     }}
                   >
-                    He saved his entire breed.
+                    He saved the entire breed.
                   </span>
                 </motion.div>
                 <motion.p

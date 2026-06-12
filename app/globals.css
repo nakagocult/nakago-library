@@ -20,7 +20,6 @@
 
   /* Fonts */
   --font-bebas: 'Akihabored', 'Bebas Neue', 'Impact', sans-serif;
-  --font-permanent-marker: 'Permanent Marker', cursive;
   --font-inter: 'Inter', system-ui, sans-serif;
   --font-grotesk: 'Space Grotesk', system-ui, sans-serif;
   --font-noto-sans-jp: 'Noto Sans JP', sans-serif;
@@ -120,7 +119,6 @@ body {
 
 /* Typography */
 .font-bebas { font-family: 'Akihabored', 'Bebas Neue', 'Impact', sans-serif; }
-.font-marker { font-family: 'Permanent Marker', cursive; }
 .font-grotesk { font-family: 'Noto Serif JP', serif; }
 .font-jp { font-family: 'Noto Sans JP', sans-serif; }
 
@@ -215,9 +213,10 @@ body {
   width: 100%;
   padding: 16px 24px;
   border-radius: 9999px;
-  font-family: 'Permanent Marker', cursive;
-  font-weight: 700;
-  font-size: 1rem;
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-weight: 400;
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
   color: #fff;
   cursor: pointer;
   background: linear-gradient(135deg, #FF4D00, #FF0000);

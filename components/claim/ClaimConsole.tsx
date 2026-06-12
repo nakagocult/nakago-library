@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Minus, Plus, Loader2, CheckCircle2, AlertTriangle, Wallet } from 'lucide-react';
-import { ClaimButton } from 'thirdweb/react';
+import { Minus, Plus, Loader2, CheckCircle2, AlertTriangle, Wallet, Images } from 'lucide-react';
+import { ClaimButton, useReadContract } from 'thirdweb/react';
 import { toEther } from 'thirdweb';
+import { balanceOf } from 'thirdweb/extensions/erc721';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { client, chain } from '@/lib/thirdweb/client';
@@ -46,13 +48,31 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
   const [errorMsg, setErrorMsg] = useState('');
   const [mintedIds, setMintedIds] = useState<number[]>([]);
 
+  // How many of this drop the connected wallet already holds, so the
+  // remaining per-wallet allowance can be deducted live.
+  const { data: ownedBalance } = useReadContract(balanceOf, {
+    contract: drop.contract,
+    owner: address ?? '0x0000000000000000000000000000000000000000',
+    queryOptions: { enabled: !!address },
+  });
+  const owned = address && ownedBalance != null ? Number(ownedBalance) : 0;
+  const remaining = Math.max(0, maxPerTx - owned);
+
   const soldOut = !stats.loading && stats.claimed >= stats.total;
+  const walletMaxed = !!address && remaining === 0;
   const totalLabel =
     stats.priceWei != null
       ? `${trim(toEther(stats.priceWei * BigInt(quantity)))} ${stats.currencySymbol}`
       : null;
 
-  const setQty = (next: number) => setQuantity(Math.max(1, Math.min(maxPerTx, next)));
+  const setQty = (next: number) =>
+    setQuantity(Math.max(1, Math.min(Math.max(1, remaining), next)));
+
+  // Clamp the selected quantity down when the remaining allowance shrinks
+  // (e.g. on connect, or after a successful claim updates the balance).
+  useEffect(() => {
+    setQuantity((q) => Math.min(q, Math.max(1, remaining)));
+  }, [remaining]);
 
   return (
     <div
@@ -94,11 +114,15 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
             </span>
             {totalLabel && <p className="text-[11px] text-white/40">{totalLabel} total</p>}
           </div>
-          <QtyBtn onClick={() => setQty(quantity + 1)} disabled={quantity >= maxPerTx} accent={drop.accent[0]}>
+          <QtyBtn onClick={() => setQty(quantity + 1)} disabled={quantity >= remaining} accent={drop.accent[0]}>
             <Plus className="h-4 w-4" />
           </QtyBtn>
         </div>
-        <p className="mt-1.5 text-right text-[10px] text-white/30">Max {maxPerTx} per transaction</p>
+        <p className="mt-1.5 text-right text-[10px] text-white/30">
+          {address && owned > 0
+            ? `${remaining} of ${maxPerTx} left for this wallet (${owned} held)`
+            : `Max ${maxPerTx} per wallet`}
+        </p>
       </div>
 
       {/* Action */}
@@ -106,6 +130,10 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
         {soldOut ? (
           <div className="rounded-2xl py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-white/50" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
             Fully Claimed
+          </div>
+        ) : walletMaxed ? (
+          <div className="rounded-2xl py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-white/50" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            Wallet Limit Reached
           </div>
         ) : !address ? (
           <div className="claim-connect flex justify-center">
@@ -146,6 +174,15 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
           </ClaimButton>
         )}
       </div>
+
+      {/* Secondary action — view collection */}
+      <Link
+        href="/view"
+        className="mt-3 flex items-center justify-center gap-2 rounded-full py-3 text-xs font-black uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-[#FF4D00]"
+        style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,77,0,0.25)', fontFamily: 'Bebas Neue, Impact, sans-serif' }}
+      >
+        <Images className="h-4 w-4" /> View my NFTs
+      </Link>
 
       {/* Status messages */}
       <AnimatePresence mode="wait">

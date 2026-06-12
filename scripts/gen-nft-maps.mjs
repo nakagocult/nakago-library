@@ -39,7 +39,7 @@ export function fpTier(tokenId: number): FPTier {
 }
 
 export function fpImg(tokenId: number): string {
-  return FP_RARE_IDS.has(tokenId) ? '/nfts/fp-12month.jpg' : '/nfts/fp-6month.jpg';
+  return FP_RARE_IDS.has(tokenId) ? '/nfts/fp-12month.png' : '/nfts/fp-6month.png';
 }
 
 // ─── NIPPO Pedigree Archives ───────────────────────────────────────────────────
