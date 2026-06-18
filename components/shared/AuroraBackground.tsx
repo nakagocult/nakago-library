@@ -22,6 +22,7 @@ const BLOBS: Blob[] = [
 
 export default function AuroraBackground() {
   const layerRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const layer = layerRef.current;
@@ -46,13 +47,32 @@ export default function AuroraBackground() {
     };
   }, []);
 
+  // Background tabs keep every infinite CSS animation below running forever.
+  // On Chromium mobile webviews (Brave Android, Trust Wallet's in-app browser)
+  // that unbounded compositor work eventually corrupts paint tiles into the
+  // blocky artifacts users see — pausing while hidden keeps the GPU load bounded.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const onVisibility = () => {
+      root.style.animationPlayState = document.hidden ? 'paused' : 'running';
+      root.querySelectorAll<HTMLElement>('.animate-orb-float, .animate-spin-slow').forEach((el) => {
+        el.style.animationPlayState = document.hidden ? 'paused' : 'running';
+      });
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
   return (
-    <div aria-hidden className="aurora-field" style={{ position: 'fixed', inset: 0, zIndex: -10, overflow: 'hidden', pointerEvents: 'none' }}>
+    <div ref={rootRef} aria-hidden className="aurora-field" style={{ position: 'fixed', inset: 0, zIndex: -10, overflow: 'hidden', pointerEvents: 'none' }}>
       <div style={{ position: 'absolute', inset: 0, background: '#060606' }} />
 
-      {/* slow conic sheen */}
+      {/* slow conic sheen — desktop only. A 160vmax layer spinning forever on
+          top of the blob layer below is pure extra compositor work that mobile
+          Chromium webviews (Brave Android, Trust Wallet) can't sustain. */}
       <div
-        className="animate-spin-slow"
+        className="animate-spin-slow hidden sm:block"
         style={{
           position: 'absolute',
           top: '50%',
@@ -68,7 +88,12 @@ export default function AuroraBackground() {
         }}
       />
 
-      {/* parallax blob layer */}
+      {/* parallax blob layer — radial-gradient already feathers softly to
+          transparent at the 70% stop, so a real-time blur() filter was never
+          needed here. Stacking blur() on several large elements that are each
+          animating transform every frame is exactly the load that triggers
+          tile-corruption glitches on mobile Chromium webviews; dropping the
+          filter removes the single most expensive op without changing the look. */}
       <div ref={layerRef} style={{ position: 'absolute', inset: 0, transition: 'transform 0.5s cubic-bezier(0.22,1,0.36,1)', willChange: 'transform' }}>
         {BLOBS.map((blob, i) => (
           <div
@@ -81,7 +106,6 @@ export default function AuroraBackground() {
               width: blob.size,
               height: blob.size,
               background: `radial-gradient(circle at center, ${blob.color} 0%, transparent 70%)`,
-              filter: 'blur(44px)',
               animationDuration: `${blob.duration}s`,
               animationDelay: `${blob.delay}s`,
               willChange: 'transform',
@@ -90,8 +114,10 @@ export default function AuroraBackground() {
         ))}
       </div>
 
-      {/* fine grain + vignette */}
+      {/* fine grain + vignette — blend-mode compositing is also costly on weak
+          mobile GPUs, so skip the grain layer below the sm breakpoint. */}
       <div
+        className="hidden sm:block"
         style={{
           position: 'absolute',
           inset: 0,
