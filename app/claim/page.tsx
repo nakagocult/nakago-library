@@ -98,7 +98,7 @@ function MintDrop({ drop, maxPerTx, badge, cardImage }: { drop: DropConfig; maxP
         <div className="absolute bottom-3 left-4">
           <span
             className="rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest"
-            style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40`, color: drop.accent[0], fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', backdropFilter: 'blur(8px)' }}
+            style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40`, color: drop.accent[0], fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
           >
             {badge}
           </span>

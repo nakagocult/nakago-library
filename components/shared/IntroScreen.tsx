@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Durations are paced to each phase's reading load — short beats for the
@@ -21,12 +21,19 @@ const PARTICLE_DUR   = [2,3,4,2.5,3.5,2,4,3,2.5,3.5,2,4,2.5,3,4,2,3.5,2.5,4,3,2,
 const PARTICLE_DELAY = [0,0.3,0.7,1.1,0.5,0.9,0.2,1.4,0.6,1.0,0.4,0.8,1.2,0.1,0.7,1.5,0.3,0.9,0.5,1.3,0.2,0.8,1.0,0.4,1.6,0.6,0.1,1.2,0.7,0.3];
 
 export default function IntroScreen() {
-  const [skip] = useState(() =>
-    typeof window !== 'undefined' && !!sessionStorage.getItem('naka_intro_done')
-  );
+  // Starts false to match the server-rendered markup exactly (sessionStorage
+  // doesn't exist during SSR). useLayoutEffect corrects it client-side before
+  // the browser paints, so a returning visitor never sees the intro flash —
+  // and React never has to discard a mismatched hydration tree.
+  const [skip, setSkip] = useState(false);
   const [phase, setPhase] = useState(0);
   const [dismissed, setDismissed] = useState(false);
+  const [mascotError, setMascotError] = useState(false);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useLayoutEffect(() => {
+    if (sessionStorage.getItem('naka_intro_done')) setSkip(true);
+  }, []);
 
   useEffect(() => {
     if (skip) return;
@@ -288,12 +295,19 @@ export default function IntroScreen() {
                     className="w-28 h-28 rounded-full overflow-hidden"
                     style={{ border: '3px solid rgba(255,215,0,0.6)' }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="https://i.ibb.co/B8zQgxk/IMG-7857.jpg"
-                      alt="Naka Go"
-                      className="w-full h-full object-cover"
-                    />
+                    {!mascotError ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src="https://i.ibb.co/B8zQgxk/IMG-7857.jpg"
+                        alt="Naka Go"
+                        className="w-full h-full object-cover"
+                        onError={() => setMascotError(true)}
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#FF4D00] to-[#FF0000] text-2xl font-bold text-white">
+                        中
+                      </div>
+                    )}
                   </motion.div>
                 </motion.div>
 

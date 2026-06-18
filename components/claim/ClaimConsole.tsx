@@ -80,6 +80,7 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
       style={{
         background: 'rgba(17,17,17,0.72)',
         backdropFilter: 'blur(24px) saturate(160%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(160%)',
         border: `1px solid ${drop.accent[0]}33`,
         boxShadow: `0 0 40px ${drop.accent[0]}12, inset 0 1px 0 rgba(255,255,255,0.05)`,
       }}

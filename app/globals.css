@@ -122,20 +122,25 @@ body {
 .font-grotesk { font-family: 'Noto Serif JP', serif; }
 .font-jp { font-family: 'Noto Sans JP', sans-serif; }
 
-/* Gradient text utilities */
+/* Gradient text utilities — solid color fallback first, in case a browser
+   supports -webkit-text-fill-color but not background-clip: text (or vice
+   versa), which would otherwise render fully invisible text. */
 .text-gradient-naka {
+  color: #FF4D00;
   background: linear-gradient(135deg, #FF4D00 0%, #FF0000 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .text-gradient-gold {
+  color: #FF4D00;
   background: linear-gradient(135deg, #FF4D00 0%, #FFD700 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .text-gradient-fire {
+  color: #FF4D00;
   background: linear-gradient(135deg, #FF0000 0%, #FF4D00 40%, #FFD700 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -145,6 +150,7 @@ body {
 /* Glass card */
 .glass-card {
   background: rgba(17, 17, 17, 0.7);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(255, 77, 0, 0.18);
   box-shadow: 0 0 30px rgba(255,77,0,0.1), inset 0 1px 0 rgba(255,255,255,0.06);

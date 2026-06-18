@@ -8,9 +8,19 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ThirdwebProvider } from 'thirdweb/react';
 import { WagmiThirdwebBridge } from '@/components/shared/WagmiThirdwebBridge';
 
+const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? 'YOUR_PROJECT_ID';
+
+if (typeof window !== 'undefined' && projectId === 'YOUR_PROJECT_ID') {
+  // WalletConnect (Trust Wallet, MetaMask Mobile, etc. when not used as the
+  // in-app browser) silently fails to connect against the placeholder id.
+  console.error(
+    '[naka] NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID is not set — WalletConnect-based wallets will fail to connect.',
+  );
+}
+
 const config = getDefaultConfig({
   appName: 'Naka Cult',
-  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? 'YOUR_PROJECT_ID',
+  projectId,
   chains: [mainnet],
   ssr: true,
 });

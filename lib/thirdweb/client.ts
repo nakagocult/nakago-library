@@ -6,6 +6,15 @@ import { ethereum } from 'thirdweb/chains';
 // every real on-chain read still requires the production client id.
 const clientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || 'placeholder-client-id';
 
+if (typeof window !== 'undefined' && clientId === 'placeholder-client-id') {
+  // Every on-chain read/write (claim, balances, NFT lookups) fails silently
+  // against the placeholder id — surface it loudly instead of letting it
+  // look like a random network error in production.
+  console.error(
+    '[naka] NEXT_PUBLIC_THIRDWEB_CLIENT_ID is not set — claim, balance, and NFT reads will fail.',
+  );
+}
+
 export const client = createThirdwebClient({ clientId });
 
 export const chain = ethereum;

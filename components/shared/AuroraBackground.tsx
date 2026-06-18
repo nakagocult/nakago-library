@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Blob {
   color: string;
@@ -23,6 +23,15 @@ const BLOBS: Blob[] = [
 export default function AuroraBackground() {
   const layerRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  // A Tailwind width breakpoint (sm:) isn't a reliable proxy for "desktop" —
+  // a phone in landscape easily exceeds 640px and would still load the heavy
+  // conic-spin/grain/extra-blob layers. pointer:fine is the same touch-vs-mouse
+  // signal already used for the parallax effect below, and it's orientation-proof.
+  const [desktopUI, setDesktopUI] = useState(false);
+
+  useEffect(() => {
+    setDesktopUI(window.matchMedia('(pointer: fine)').matches);
+  }, []);
 
   useEffect(() => {
     const layer = layerRef.current;
@@ -68,25 +77,28 @@ export default function AuroraBackground() {
     <div ref={rootRef} aria-hidden className="aurora-field" style={{ position: 'fixed', inset: 0, zIndex: -10, overflow: 'hidden', pointerEvents: 'none' }}>
       <div style={{ position: 'absolute', inset: 0, background: '#060606' }} />
 
-      {/* slow conic sheen — desktop only. A 160vmax layer spinning forever on
-          top of the blob layer below is pure extra compositor work that mobile
-          Chromium webviews (Brave Android, Trust Wallet) can't sustain. */}
-      <div
-        className="animate-spin-slow hidden sm:block"
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          width: '160vmax',
-          height: '160vmax',
-          marginLeft: '-80vmax',
-          marginTop: '-80vmax',
-          background:
-            'conic-gradient(from 0deg, rgba(255,77,0,0.06), transparent 25%, rgba(155,48,255,0.05) 50%, transparent 75%, rgba(255,77,0,0.06))',
-          animationDuration: '60s',
-          willChange: 'transform',
-        }}
-      />
+      {/* slow conic sheen — fine-pointer (desktop) only. A 160vmax layer
+          spinning forever on top of the blob layer below is pure extra
+          compositor work that mobile Chromium webviews (Brave Android, Trust
+          Wallet) can't sustain. */}
+      {desktopUI && (
+        <div
+          className="animate-spin-slow"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: '160vmax',
+            height: '160vmax',
+            marginLeft: '-80vmax',
+            marginTop: '-80vmax',
+            background:
+              'conic-gradient(from 0deg, rgba(255,77,0,0.06), transparent 25%, rgba(155,48,255,0.05) 50%, transparent 75%, rgba(255,77,0,0.06))',
+            animationDuration: '60s',
+            willChange: 'transform',
+          }}
+        />
+      )}
 
       {/* parallax blob layer — radial-gradient already feathers softly to
           transparent at the 70% stop, so a real-time blur() filter was never
@@ -95,10 +107,10 @@ export default function AuroraBackground() {
           tile-corruption glitches on mobile Chromium webviews; dropping the
           filter removes the single most expensive op without changing the look. */}
       <div ref={layerRef} style={{ position: 'absolute', inset: 0, transition: 'transform 0.5s cubic-bezier(0.22,1,0.36,1)', willChange: 'transform' }}>
-        {BLOBS.map((blob, i) => (
+        {BLOBS.filter((blob) => blob.mobile || desktopUI).map((blob, i) => (
           <div
             key={i}
-            className={`animate-orb-float ${blob.mobile ? '' : 'hidden sm:block'}`}
+            className="animate-orb-float"
             style={{
               position: 'absolute',
               top: blob.top,
@@ -115,17 +127,18 @@ export default function AuroraBackground() {
       </div>
 
       {/* fine grain + vignette — blend-mode compositing is also costly on weak
-          mobile GPUs, so skip the grain layer below the sm breakpoint. */}
-      <div
-        className="hidden sm:block"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E\")",
-          mixBlendMode: 'overlay',
-        }}
-      />
+          mobile GPUs, so skip the grain layer on touch devices. */}
+      {desktopUI && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E\")",
+            mixBlendMode: 'overlay',
+          }}
+        />
+      )}
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 0%, transparent 38%, rgba(0,0,0,0.6) 100%)' }} />
     </div>
   );

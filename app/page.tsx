@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Gem, Images, ArrowRight, Coins, Percent, Flame, ShieldCheck } from 'lucide-react';
@@ -28,6 +29,8 @@ const TOKENOMICS = [
 ];
 
 export default function HomePage() {
+  const [mascotError, setMascotError] = useState(false);
+
   return (
     <main className="relative">
       {/* Hero */}
@@ -58,8 +61,19 @@ export default function HomePage() {
             className="animate-float mb-8 h-36 w-36 overflow-hidden rounded-full sm:h-44 sm:w-44"
             style={{ border: '3px solid rgba(255,215,0,0.6)', boxShadow: '0 0 50px rgba(255,77,0,0.4)' }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={MASCOT_URL} alt="Naka Go" className="h-full w-full object-cover" />
+            {!mascotError ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={MASCOT_URL}
+                alt="Naka Go"
+                className="h-full w-full object-cover"
+                onError={() => setMascotError(true)}
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#FF4D00] to-[#FF0000] text-4xl font-bold text-white">
+                中
+              </div>
+            )}
           </motion.div>
 
           {/* Title */}
