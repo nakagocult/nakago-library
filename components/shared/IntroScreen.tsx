@@ -42,6 +42,14 @@ export default function IntroScreen() {
     return () => ids.forEach(clearTimeout);
   }, [skip]);
 
+  // Hide the always-mounted AuroraBackground while the intro covers the screen.
+  // It's invisible behind the opaque overlay but still burns GPU otherwise.
+  useEffect(() => {
+    const active = !skip && !dismissed;
+    document.body.classList.toggle('intro-active', active);
+    return () => document.body.classList.remove('intro-active');
+  }, [skip, dismissed]);
+
   const handleEnter = () => {
     sessionStorage.setItem('naka_intro_done', '1');
     setDismissed(true);
@@ -67,28 +75,24 @@ export default function IntroScreen() {
           }}
         />
 
-        {/* Animated orbs */}
-        <motion.div
-          animate={{ scale: [1, 1.3, 1], opacity: [0.15, 0.35, 0.15] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        {/* Static orbs — radial gradients already feather softly, so no blur
+            filter or infinite animation is needed (both are costly in mobile
+            in-app webviews like Trust). */}
+        <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(255,77,0,0.25) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(255,77,0,0.22) 0%, transparent 70%)' }}
         />
-        <motion.div
-          animate={{ x: [0, 40, -30, 0], y: [0, -30, 20, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        <div
           className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(255,77,0,0.12) 0%, transparent 70%)', filter: 'blur(40px)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255,77,0,0.12) 0%, transparent 70%)' }}
         />
-        <motion.div
-          animate={{ x: [0, -40, 30, 0], y: [0, 20, -30, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        <div
           className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%)', filter: 'blur(50px)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%)' }}
         />
 
-        {/* Particle dots */}
-        {PARTICLE_LEFT.map((left, i) => (
+        {/* Particle dots — capped low; each one is its own infinite loop. */}
+        {PARTICLE_LEFT.slice(0, 8).map((left, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 rounded-full"
@@ -116,14 +120,12 @@ export default function IntroScreen() {
                 exit={{ opacity: 0, scale: 1.4 }}
                 transition={{ duration: 0.8, ease: [0.34, 1.56, 0.64, 1] }}
               >
-                <motion.div
-                  animate={{ filter: ['drop-shadow(0 0 10px #FFD700)', 'drop-shadow(0 0 40px #FF4D00)', 'drop-shadow(0 0 10px #FFD700)'] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                <div
                   className="text-[120px] leading-none font-bold"
-                  style={{ fontFamily: "'Noto Serif JP', serif", color: '#FFD700' }}
+                  style={{ fontFamily: "'Noto Serif JP', serif", color: '#FFD700', textShadow: '0 0 28px rgba(255,77,0,0.7)' }}
                 >
                   中号
-                </motion.div>
+                </div>
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -252,17 +254,6 @@ export default function IntroScreen() {
                   style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: 'white' }}
                 >
                   Guardian of the breed.
-                  <br />
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, #FF4D00, #FFD700)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}
-                  >
-                    He saved the entire breed.
-                  </span>
                 </motion.div>
                 <motion.p
                   initial={{ opacity: 0 }}
