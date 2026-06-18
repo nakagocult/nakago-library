@@ -81,8 +81,8 @@ export default function NavBar() {
 
   return (
     <nav
-      className="sticky top-0 z-50 w-full backdrop-blur-xl"
-      style={{ background: 'rgba(10,10,10,0.7)', borderBottom: '1px solid rgba(255,77,0,0.12)' }}
+      className="sticky top-0 z-50 w-full"
+      style={{ background: 'rgba(10,10,10,0.92)', borderBottom: '1px solid rgba(255,77,0,0.12)' }}
     >
       <div className="relative mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
         {/* Logo */}
