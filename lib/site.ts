@@ -12,6 +12,7 @@ export const SOCIAL_LINKS = {
 
 export const DDERGO_ARTIST_ID = '6B30jOzfy4u8nu9PrcoOFa';
 export const DDERGO_ARTIST_URL = `https://open.spotify.com/artist/${DDERGO_ARTIST_ID}`;
+export const DDERGO_FOLLOW_SCOPE = 'user-follow-modify';
 
 /**
  * Stream-bar moods. `uri` is loaded into the embedded player on tab select.
