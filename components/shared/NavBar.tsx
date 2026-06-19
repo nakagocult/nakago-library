@@ -11,6 +11,7 @@ import CopyAddress from '@/components/shared/CopyAddress';
 
 const LINKS = [
   { href: '/', label: 'Home' },
+  { href: '/#ddergo', label: 'Radio' },
   { href: '/claim', label: 'Claim' },
   { href: '/view', label: 'View' },
   { href: '/cawf', label: 'CAWF' },

@@ -176,6 +176,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* DDERGO — on-site music player, surfaced right under the hero so it's
+          immediately visible without scrolling past the lore sections. */}
+      <section id="ddergo" className="relative z-10 mx-auto max-w-5xl px-4 pb-16 sm:pb-20">
+        <SectionHeading kicker="On The Airwaves" title="DDERGO Radio" />
+        <div className="mt-10">
+          <DdergoPlayer />
+        </div>
+      </section>
+
       {/* Timeline — the legend in four beats */}
       <section className="relative z-10 mx-auto max-w-5xl px-4 py-16 sm:py-20">
         <SectionHeading kicker="The Legend" title="A Breed Saved" />
@@ -205,14 +214,6 @@ export default function HomePage() {
               <p className="mt-2 text-sm leading-relaxed text-white/55">{beat.text}</p>
             </motion.div>
           ))}
-        </div>
-      </section>
-
-      {/* DDERGO — on-site music player */}
-      <section className="relative z-10 mx-auto max-w-5xl px-4 pb-16 sm:pb-20">
-        <SectionHeading kicker="On The Airwaves" title="DDERGO Radio" />
-        <div className="mt-10">
-          <DdergoPlayer />
         </div>
       </section>
 
