@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Gem, Images, ArrowRight, Coins, Percent, Flame, ShieldCheck } from 'lucide-react';
 import { MASCOT_URL, SOCIAL_LINKS } from '@/lib/site';
+import DdergoPlayer from '@/components/shared/DdergoPlayer';
 
 // Hero stats are lore-only — token facts live in the NAKAnomics band below.
 const STATS = [
@@ -204,6 +205,14 @@ export default function HomePage() {
               <p className="mt-2 text-sm leading-relaxed text-white/55">{beat.text}</p>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* DDERGO — on-site music player */}
+      <section className="relative z-10 mx-auto max-w-5xl px-4 pb-16 sm:pb-20">
+        <SectionHeading kicker="On The Airwaves" title="DDERGO Radio" />
+        <div className="mt-10">
+          <DdergoPlayer />
         </div>
       </section>
 

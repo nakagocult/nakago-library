@@ -107,6 +107,7 @@
     0% { transform: scale(0.8); opacity: 1; }
     100% { transform: scale(2); opacity: 0; }
   }
+  @keyframes vinylSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 }
 
 /* Base */
@@ -185,6 +186,7 @@ body {
    spinning conic gradient and blend-mode noise (a real cost in mobile webviews). */
 body.intro-active .aurora-field { display: none; }
 .animate-pulse-ring { animation: pulseRing 1.5s ease-out infinite; }
+.vinyl-disc { animation: vinylSpin 3.5s linear infinite; }
 
 /* Neon borders */
 .neon-border-orange {
