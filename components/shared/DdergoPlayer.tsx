@@ -160,6 +160,33 @@ export default function DdergoPlayer() {
     controllerRef.current?.play();
   };
 
+  // Lets the top-left radio FAB kick off playback even when this component
+  // hasn't mounted yet at click time (it's lazy-loaded). The FAB sets a
+  // sessionStorage flag before the player exists; this checks for it on
+  // mount, then a live event listener handles the case where the player is
+  // already up and the FAB is clicked again.
+  const pendingRandomPlayRef = useRef(sessionStorage.getItem('naka_pending_random_play') === '1');
+  useEffect(() => {
+    sessionStorage.removeItem('naka_pending_random_play');
+    const playRandom = () => {
+      if (tracks.length === 0 || !controllerRef.current) {
+        pendingRandomPlayRef.current = true;
+        return;
+      }
+      playTrack(tracks[Math.floor(Math.random() * tracks.length)]);
+    };
+    window.addEventListener('naka:play-random', playRandom);
+    return () => window.removeEventListener('naka:play-random', playRandom);
+  }, [tracks]);
+
+  useEffect(() => {
+    if (pendingRandomPlayRef.current && tracks.length > 0 && controllerReady) {
+      pendingRandomPlayRef.current = false;
+      const track = tracks[Math.floor(Math.random() * tracks.length)];
+      Promise.resolve().then(() => playTrack(track));
+    }
+  }, [tracks, controllerReady]);
+
   const selectStream = (id: string) => {
     const stream = DDERGO_STREAMS.find((s) => s.id === id);
     if (!stream || !stream.enabled) return;

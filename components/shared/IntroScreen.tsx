@@ -1,24 +1,36 @@
 'use client';
 
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useLayoutEffect, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Durations are paced to each phase's reading load — short beats for the
-// symbol/year/tagline, a long hold for the dense story paragraph. Each value
-// already accounts for the entrance-animation delay before its text is visible.
-const PHASES = [
-  { id: 'kanji', duration: 1800 },
-  { id: 'year', duration: 2000 },
-  { id: 'tagline', duration: 2400 },
-  { id: 'story', duration: 3600 },
-  { id: 'enter', duration: 99999 },
+interface Step {
+  badge: string;
+  icon: string;
+  title: [string, string]; // [plain, accent]
+  text: string;
+}
+
+const STEPS: Step[] = [
+  {
+    badge: 'Welcome',
+    icon: '中',
+    title: ['Step into ', 'NAKA GO'],
+    text: 'Born 1948 of the Akaishi line. The Shiba who saved the breed — now living on-chain as $NAKA.',
+  },
+  {
+    badge: 'Legacy',
+    icon: '血',
+    title: ['Loyalty Never ', 'Dies'],
+    text: '80% of every Shiba Inu alive today carries his bloodline. The legend never left.',
+  },
+  {
+    badge: 'Ecosystem',
+    icon: '中号',
+    title: ['Enter The ', 'Ecosystem'],
+    text: 'Claim drops, browse the gallery, and stream DDERGO Radio — all in one place.',
+  },
 ];
-
-// Pre-computed static values — no Math.random() during render
-const PARTICLE_LEFT  = [8,15,23,31,42,54,63,71,79,87,93,5,18,28,38,48,58,68,76,84,91,11,21,35,47,59,72,82,89,96];
-const PARTICLE_TOP   = [5,18,32,47,61,73,85,12,26,40,55,68,80,92,7,22,37,52,66,78,90,14,29,44,57,70,83,95,20,48];
-const PARTICLE_DUR   = [2,3,4,2.5,3.5,2,4,3,2.5,3.5,2,4,2.5,3,4,2,3.5,2.5,4,3,2,3.5,2.5,4,3,2,4,2.5,3.5,2];
-const PARTICLE_DELAY = [0,0.3,0.7,1.1,0.5,0.9,0.2,1.4,0.6,1.0,0.4,0.8,1.2,0.1,0.7,1.5,0.3,0.9,0.5,1.3,0.2,0.8,1.0,0.4,1.6,0.6,0.1,1.2,0.7,0.3];
 
 export default function IntroScreen() {
   // Starts false to match the server-rendered markup exactly (sessionStorage
@@ -26,28 +38,15 @@ export default function IntroScreen() {
   // the browser paints, so a returning visitor never sees the intro flash —
   // and React never has to discard a mismatched hydration tree.
   const [skip, setSkip] = useState(false);
-  const [phase, setPhase] = useState(0);
+  const [step, setStep] = useState(0);
   const [dismissed, setDismissed] = useState(false);
-  const [mascotError, setMascotError] = useState(false);
-  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useLayoutEffect(() => {
+    // Must run synchronously before paint — deferring this to a microtask
+    // would let the intro flash for returning visitors for one frame.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (sessionStorage.getItem('naka_intro_done')) setSkip(true);
   }, []);
-
-  useEffect(() => {
-    if (skip) return;
-    let elapsed = 0;
-    const ids: ReturnType<typeof setTimeout>[] = [];
-    PHASES.forEach((p, i) => {
-      if (i === PHASES.length - 1) return;
-      const t = setTimeout(() => setPhase(i + 1), elapsed + p.duration);
-      ids.push(t);
-      elapsed += p.duration;
-    });
-    timeoutsRef.current = ids;
-    return () => ids.forEach(clearTimeout);
-  }, [skip]);
 
   // Hide the always-mounted AuroraBackground while the intro covers the screen.
   // It's invisible behind the opaque overlay but still burns GPU otherwise.
@@ -57,12 +56,20 @@ export default function IntroScreen() {
     return () => document.body.classList.remove('intro-active');
   }, [skip, dismissed]);
 
-  const handleEnter = () => {
+  const finish = () => {
     sessionStorage.setItem('naka_intro_done', '1');
+    window.dispatchEvent(new Event('naka:intro-done'));
     setDismissed(true);
   };
 
+  const next = () => {
+    if (step === STEPS.length - 1) finish();
+    else setStep((s) => s + 1);
+  };
+
   if (skip || dismissed) return null;
+
+  const current = STEPS[step];
 
   return (
     <AnimatePresence>
@@ -70,316 +77,107 @@ export default function IntroScreen() {
         key="intro"
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.8 }}
-        className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
-        style={{ background: '#000' }}
+        transition={{ duration: 0.4 }}
+        className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
+        style={{ background: '#050505' }}
       >
-        {/* Scanline overlay */}
+        {/* Single static glow — no infinite-loop particles or blur filters,
+            both costly on low-power mobile webviews. */}
         <div
-          className="absolute inset-0 pointer-events-none z-20"
-          style={{
-            background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px)',
-          }}
+          className="pointer-events-none absolute inset-0"
+          style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(255,77,0,0.18) 0%, transparent 60%)' }}
         />
 
-        {/* Static orbs — radial gradients already feather softly, so no blur
-            filter or infinite animation is needed (both are costly in mobile
-            in-app webviews like Trust). */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(255,77,0,0.22) 0%, transparent 70%)' }}
-        />
-        <div
-          className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(255,77,0,0.12) 0%, transparent 70%)' }}
-        />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%)' }}
-        />
+        {/* Skip — always available, never gated behind the last step */}
+        <button
+          type="button"
+          onClick={finish}
+          className="absolute right-4 top-6 z-10 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-white/50 transition-colors hover:text-white"
+          style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
+        >
+          Skip <X className="h-3 w-3" />
+        </button>
 
-        {/* Particle dots — capped low; each one is its own infinite loop. */}
-        {PARTICLE_LEFT.slice(0, 8).map((left, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full"
-            style={{
-              left: `${left}%`,
-              top: `${PARTICLE_TOP[i]}%`,
-              background: i % 3 === 0 ? '#FF4D00' : i % 3 === 1 ? '#FFD700' : '#fff',
-              opacity: 0.4,
-            }}
-            animate={{ opacity: [0.1, 0.6, 0.1], scale: [0.8, 1.4, 0.8] }}
-            transition={{ duration: PARTICLE_DUR[i], repeat: Infinity, delay: PARTICLE_DELAY[i] }}
-          />
-        ))}
+        {/* Card */}
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          className="relative z-10 w-full max-w-sm rounded-3xl p-6"
+          style={{ background: 'rgba(17,17,17,0.85)', border: '1px solid rgba(255,77,0,0.2)', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}
+        >
+          <div className="mb-5 flex items-center justify-between">
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-[#FF4D00]"
+              style={{ background: 'rgba(255,77,0,0.12)' }}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-[#FF4D00]" /> {current.badge}
+            </span>
+            <span className="text-xs font-bold tabular-nums text-white/30">
+              {step + 1} / {STEPS.length}
+            </span>
+          </div>
 
-        {/* Content */}
-        <div className="relative z-30 text-center px-6 max-w-2xl w-full">
+          <div
+            className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl font-bold"
+            style={{ background: 'rgba(255,215,0,0.1)', border: '1px solid rgba(255,215,0,0.25)', fontFamily: "'Noto Serif JP', serif", color: '#FFD700' }}
+          >
+            {current.icon}
+          </div>
 
-          {/* Phase 0: Kanji */}
-          <AnimatePresence mode="wait">
-            {phase === 0 && (
-              <motion.div
-                key="kanji"
-                initial={{ opacity: 0, scale: 0.6 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.4 }}
-                transition={{ duration: 0.8, ease: [0.34, 1.56, 0.64, 1] }}
-              >
-                <div
-                  className="text-[120px] leading-none font-bold"
-                  style={{ fontFamily: "'Noto Serif JP', serif", color: '#FFD700', textShadow: '0 0 28px rgba(255,77,0,0.7)' }}
-                >
-                  中号
-                </div>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="text-white/40 text-sm mt-2 tracking-widest uppercase"
-                  style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.5em' }}
-                >
-                  Naka Go
-                </motion.p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <h2
+            className="mb-3 text-3xl font-black leading-tight"
+            style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.02em' }}
+          >
+            <span className="text-white">{current.title[0]}</span>
+            <span
+              style={{
+                background: 'linear-gradient(135deg, #FF4D00, #FFD700)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              {current.title[1]}
+            </span>
+          </h2>
 
-          {/* Phase 1: Year */}
-          <AnimatePresence mode="wait">
-            {phase === 1 && (
-              <motion.div
-                key="year"
-                initial={{ opacity: 0, y: 40, letterSpacing: '0.5em' }}
-                animate={{ opacity: 1, y: 0, letterSpacing: '0.15em' }}
-                exit={{ opacity: 0, y: -40 }}
-                transition={{ duration: 0.7 }}
-              >
-                <div
-                  className="text-[100px] md:text-[140px] leading-none font-black"
-                  style={{
-                    fontFamily: 'Bebas Neue, Impact, sans-serif',
-                    background: 'linear-gradient(135deg, #FF4D00, #FFD700)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    filter: 'drop-shadow(0 0 20px rgba(255,77,0,0.6))',
-                  }}
-                >
-                  1948
-                </div>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.6 }}
-                  transition={{ delay: 0.5 }}
-                  className="text-white text-sm mt-3 tracking-[0.4em] uppercase"
-                  style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
-                >
-                  The legend was born
-                </motion.p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <p className="mb-6 text-sm leading-relaxed text-white/55">{current.text}</p>
 
-          {/* Phase 2: Tagline */}
-          <AnimatePresence mode="wait">
-            {phase === 2 && (
-              <motion.div
-                key="tagline"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6 }}
-                className="space-y-4"
-              >
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: '100%' }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="h-px mx-auto"
-                  style={{ background: 'linear-gradient(90deg, transparent, #FF4D00, transparent)', maxWidth: 300 }}
-                />
-                <div
-                  className="text-4xl md:text-6xl font-black leading-tight"
-                  style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.08em' }}
-                >
-                  {['LOYALTY', 'NEVER', 'DIES'].map((word, i) => (
-                    <motion.span
-                      key={word}
-                      initial={{ opacity: 0, x: -30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.1 + i * 0.15 }}
-                      className="block"
-                      style={{
-                        background: i === 1 ? 'linear-gradient(135deg, #FF4D00, #FFD700)' : undefined,
-                        WebkitBackgroundClip: i === 1 ? 'text' : undefined,
-                        WebkitTextFillColor: i === 1 ? 'transparent' : 'white',
-                        backgroundClip: i === 1 ? 'text' : undefined,
-                      }}
-                    >
-                      {word}
-                    </motion.span>
-                  ))}
-                </div>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: '100%' }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  className="h-px mx-auto"
-                  style={{ background: 'linear-gradient(90deg, transparent, #FFD700, transparent)', maxWidth: 300 }}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Phase 3: Story */}
-          <AnimatePresence mode="wait">
-            {phase === 3 && (
-              <motion.div
-                key="story"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6 }}
-                className="space-y-5"
-              >
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="text-white/30 text-xs uppercase tracking-[0.4em]"
-                  style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
-                >
-                  One Shiba Changed Everything
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-2xl md:text-3xl font-black leading-tight"
-                  style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: 'white' }}
-                >
-                  Guardian of the breed.
-                </motion.div>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.65 }}
-                  transition={{ delay: 0.7 }}
-                  className="text-white text-base leading-relaxed max-w-sm mx-auto"
-                >
-                  80% of every Shiba alive carries his bloodline.
-                </motion.p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Phase 4: Enter */}
-          <AnimatePresence mode="wait">
-            {phase === 4 && (
-              <motion.div
-                key="enter"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
-                className="space-y-8"
-              >
-                <motion.div
-                  animate={{ y: [0, -12, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                  className="flex justify-center"
-                >
-                  <motion.div
-                    animate={{ boxShadow: ['0 0 20px rgba(255,77,0,0.5)', '0 0 50px rgba(255,215,0,0.8)', '0 0 20px rgba(255,77,0,0.5)'] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                    className="w-28 h-28 rounded-full overflow-hidden"
-                    style={{ border: '3px solid rgba(255,215,0,0.6)' }}
-                  >
-                    {!mascotError ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src="https://i.ibb.co/B8zQgxk/IMG-7857.jpg"
-                        alt="Naka Go"
-                        className="w-full h-full object-cover"
-                        onError={() => setMascotError(true)}
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#FF4D00] to-[#FF0000] text-2xl font-bold text-white">
-                        中
-                      </div>
-                    )}
-                  </motion.div>
-                </motion.div>
-
-                <div>
-                  <motion.div
-                    animate={{ opacity: [0.6, 1, 0.6] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="text-white/40 text-xs uppercase tracking-[0.5em] mb-3"
-                    style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
-                  >
-                    Are you worthy of the legacy?
-                  </motion.div>
-                  <div
-                    className="text-5xl md:text-7xl font-black leading-none mb-2"
-                    style={{
-                      fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif',
-                      letterSpacing: '0.04em',
-                      background: 'linear-gradient(135deg, #FF4D00, #FFD700)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      filter: 'drop-shadow(0 0 30px rgba(255,77,0,0.5))',
-                    }}
-                  >
-                    ENTER THE
-                    <br />
-                    ECOSYSTEM
-                  </div>
-                </div>
-
-                <motion.button
-                  onClick={handleEnter}
-                  whileHover={{ scale: 1.06, boxShadow: '0 0 60px rgba(255,77,0,0.8)' }}
-                  whileTap={{ scale: 0.96 }}
-                  animate={{ boxShadow: ['0 0 25px rgba(255,77,0,0.4)', '0 0 50px rgba(255,77,0,0.7)', '0 0 25px rgba(255,77,0,0.4)'] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="px-14 py-5 rounded-full text-white font-black text-xl tracking-widest uppercase cursor-pointer"
-                  style={{
-                    fontFamily: 'Bebas Neue, Impact, sans-serif',
-                    background: 'linear-gradient(135deg, #FF4D00, #FF0000)',
-                    letterSpacing: '0.2em',
-                    border: '2px solid rgba(255,215,0,0.3)',
-                  }}
-                >
-                  I Am Worthy
-                </motion.button>
-
-                <motion.button
-                  onClick={handleEnter}
-                  className="block mx-auto text-white/25 text-xs tracking-widest uppercase mt-2 hover:text-white/50 transition-colors cursor-pointer"
-                  style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.3em' }}
-                >
-                  Skip Intro
-                </motion.button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Phase indicator dots */}
-        <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center z-30">
-          <div className="flex gap-2">
-            {PHASES.map((_, i) => (
-              <motion.div
+          {/* Step dots */}
+          <div className="mb-5 flex gap-1.5">
+            {STEPS.map((_, i) => (
+              <div
                 key={i}
-                animate={{ opacity: phase === i ? 1 : 0.2, scale: phase === i ? 1.4 : 1 }}
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: phase === i ? '#FF4D00' : '#fff' }}
+                className="h-1.5 flex-1 rounded-full transition-colors"
+                style={{ background: i <= step ? '#FF4D00' : 'rgba(255,255,255,0.12)' }}
               />
             ))}
           </div>
-        </div>
+
+          <div className="flex items-center gap-2">
+            {step > 0 && (
+              <button
+                type="button"
+                onClick={() => setStep((s) => s - 1)}
+                aria-label="Previous"
+                className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white/60 transition-colors hover:text-white"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={next}
+              className="flex flex-1 items-center justify-center gap-2 rounded-full py-3.5 text-sm font-black uppercase tracking-[0.15em] text-black"
+              style={{ background: 'linear-gradient(135deg, #FFD700, #FF4D00)', boxShadow: '0 0 24px rgba(255,77,0,0.35)' }}
+            >
+              {step === STEPS.length - 1 ? 'Enter Site' : 'Continue'} <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </motion.div>
       </motion.div>
     </AnimatePresence>
   );
