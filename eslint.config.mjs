@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Stale standalone scaffold — excluded from the build and tsconfig too.
     "naka-go-app/**",
+    // Local-only saved-webpage reference dump, not app source.
+    "imgs/**",
   ]),
 ]);
 

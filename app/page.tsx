@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Gem, Images, ArrowRight, Coins, Percent, Flame, ShieldCheck } from 'lucide-react';
 import { MASCOT_URL, SOCIAL_LINKS } from '@/lib/site';
-import DdergoPlayerGate from '@/components/shared/DdergoPlayerGate';
-import RadioFAB from '@/components/shared/RadioFAB';
 
 // Hero stats are lore-only — token facts live in the NAKAnomics band below.
 const STATS = [
@@ -35,8 +33,6 @@ export default function HomePage() {
 
   return (
     <main className="relative">
-      <RadioFAB />
-
       {/* Hero */}
       <section className="relative flex min-h-screen flex-col items-center justify-center px-4 py-24 text-center">
         <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center">
@@ -176,15 +172,6 @@ export default function HomePage() {
               </div>
             ))}
           </motion.div>
-        </div>
-      </section>
-
-      {/* DDERGO — on-site music player, surfaced right under the hero so it's
-          immediately visible without scrolling past the lore sections. */}
-      <section id="ddergo" className="relative z-10 mx-auto max-w-5xl px-4 pb-16 sm:pb-20">
-        <SectionHeading kicker="On The Airwaves" title="DDERGO Radio" />
-        <div className="mt-10">
-          <DdergoPlayerGate />
         </div>
       </section>
 

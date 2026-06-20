@@ -11,7 +11,7 @@ import CopyAddress from '@/components/shared/CopyAddress';
 
 const LINKS = [
   { href: '/', label: 'Home' },
-  { href: '/#ddergo', label: 'Radio' },
+  { action: 'play-radio' as const, label: 'Radio' },
   { href: '/claim', label: 'Claim' },
   { href: '/view', label: 'View' },
   { href: '/cawf', label: 'CAWF' },
@@ -166,19 +166,34 @@ export default function NavBar() {
                   style={{ background: 'rgba(17,17,17,0.92)', border: '1px solid rgba(255,77,0,0.2)', boxShadow: '0 12px 40px rgba(0,0,0,0.5)' }}
                 >
                   {LINKS.map((link) => {
-                    const active = pathname === link.href;
+                    const active = 'href' in link && pathname === link.href;
+                    const className =
+                      'block w-full rounded-lg px-3 py-2.5 text-left text-sm font-black uppercase tracking-[0.2em] transition-colors';
+                    const style = {
+                      color: active ? '#FF4D00' : 'rgba(255,255,255,0.6)',
+                      background: active ? 'rgba(255,77,0,0.1)' : 'transparent',
+                      fontFamily: 'Bebas Neue, Impact, sans-serif',
+                    } as const;
+
+                    if ('action' in link) {
+                      return (
+                        <button
+                          key={link.label}
+                          type="button"
+                          onClick={() => {
+                            setMenuOpen(false);
+                            window.dispatchEvent(new Event('naka:play-random'));
+                          }}
+                          className={className}
+                          style={style}
+                        >
+                          {link.label}
+                        </button>
+                      );
+                    }
+
                     return (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setMenuOpen(false)}
-                        className="block rounded-lg px-3 py-2.5 text-sm font-black uppercase tracking-[0.2em] transition-colors"
-                        style={{
-                          color: active ? '#FF4D00' : 'rgba(255,255,255,0.6)',
-                          background: active ? 'rgba(255,77,0,0.1)' : 'transparent',
-                          fontFamily: 'Bebas Neue, Impact, sans-serif',
-                        }}
-                      >
+                      <Link key={link.href} href={link.href} onClick={() => setMenuOpen(false)} className={className} style={style}>
                         {link.label}
                       </Link>
                     );

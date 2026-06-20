@@ -5,6 +5,8 @@ import AuroraBackground from '@/components/shared/AuroraBackground';
 import NavBar from '@/components/shared/NavBar';
 import IntroScreen from '@/components/shared/IntroScreen';
 import WordLineageFooter from '@/components/shared/WordLineageFooter';
+import RadioDock from '@/components/shared/RadioDock';
+import { getDdergoTracks } from '@/lib/ddergo-tracks';
 
 export const metadata: Metadata = {
   title: 'NAKA GO 中号 | The Shiba Who Saved The Breed',
@@ -22,6 +24,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const tracks = getDdergoTracks();
   return (
     <html lang="en">
       <head>
@@ -39,6 +42,7 @@ export default function RootLayout({
           <NavBar />
           {children}
           <WordLineageFooter />
+          <RadioDock tracks={tracks} />
         </Providers>
       </body>
     </html>
