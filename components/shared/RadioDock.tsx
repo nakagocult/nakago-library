@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Shuffle, ListMusic, Disc3, X } from 'lucide-react';
-import { DDERGO_ARTIST_URL } from '@/lib/site';
+import { Play, Pause, SkipBack, SkipForward, Shuffle, ListMusic, X } from 'lucide-react';
+import { DDERGO_ARTIST_URL, DDERGO_ARTIST_IMG } from '@/lib/site';
 import type { RadioTrack } from '@/lib/ddergo-tracks';
 
 function formatTime(s: number) {
@@ -130,7 +130,7 @@ export default function RadioDock({ tracks }: { tracks: RadioTrack[] }) {
               className="text-[11px] font-black uppercase tracking-[0.2em] text-white/50"
               style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
             >
-              DDERGO — {tracks.length} tracks
+              DDERGO RECORDS — {tracks.length} tracks
             </span>
             <button type="button" onClick={() => setListOpen(false)} aria-label="Close list" className="text-white/40 hover:text-white">
               <X className="h-4 w-4" />
@@ -176,15 +176,11 @@ export default function RadioDock({ tracks }: { tracks: RadioTrack[] }) {
           <div
             className="vinyl-disc flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full"
             style={{
-              background: current?.art
-                ? `url(${current.art}) center/cover`
-                : 'repeating-radial-gradient(circle, #0a0a0a 0px, #0a0a0a 2px, #1a1a1a 3px, #1a1a1a 4px)',
+              background: `url(${current?.art ?? DDERGO_ARTIST_IMG}) center/cover`,
               border: '2px solid rgba(29,185,84,0.4)',
               animationPlayState: isPlaying ? 'running' : 'paused',
             }}
-          >
-            {!current?.art && <Disc3 className="h-4 w-4 text-[#1DB954]" />}
-          </div>
+          />
 
           {/* Prev (hidden on xs) */}
           <button type="button" onClick={playPrev} aria-label="Previous" className="hidden text-white/60 transition-colors hover:text-white sm:block">
@@ -211,7 +207,7 @@ export default function RadioDock({ tracks }: { tracks: RadioTrack[] }) {
           <div className="min-w-0 flex-1">
             <p className="truncate text-[12px] font-semibold text-white/85">
               {current ? current.title : 'DDERGO Radio'}
-              <span className="ml-1.5 font-normal text-white/35">{current ? '· DDERGO' : '· tap play'}</span>
+              <span className="ml-1.5 font-normal text-white/35">{current ? '· DDERGO RECORDS' : '· tap play'}</span>
             </p>
             <div className="mt-1 flex items-center gap-2">
               <span className="hidden w-8 text-right text-[10px] tabular-nums text-white/35 sm:block">{formatTime(time)}</span>

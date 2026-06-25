@@ -11,7 +11,6 @@ import CopyAddress from '@/components/shared/CopyAddress';
 
 const LINKS = [
   { href: '/', label: 'Home' },
-  { action: 'play-radio' as const, label: 'Radio' },
   { href: '/claim', label: 'Claim' },
   { href: '/view', label: 'View' },
   { href: '/cawf', label: 'CAWF' },
@@ -174,23 +173,6 @@ export default function NavBar() {
                       background: active ? 'rgba(255,77,0,0.1)' : 'transparent',
                       fontFamily: 'Bebas Neue, Impact, sans-serif',
                     } as const;
-
-                    if ('action' in link) {
-                      return (
-                        <button
-                          key={link.label}
-                          type="button"
-                          onClick={() => {
-                            setMenuOpen(false);
-                            window.dispatchEvent(new Event('naka:play-random'));
-                          }}
-                          className={className}
-                          style={style}
-                        >
-                          {link.label}
-                        </button>
-                      );
-                    }
 
                     return (
                       <Link key={link.href} href={link.href} onClick={() => setMenuOpen(false)} className={className} style={style}>

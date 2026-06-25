@@ -13,3 +13,7 @@ export const SOCIAL_LINKS = {
 // DDERGO's Spotify artist page — linked from the radio dock's "Follow" button.
 export const DDERGO_ARTIST_ID = '6B30jOzfy4u8nu9PrcoOFa';
 export const DDERGO_ARTIST_URL = `https://open.spotify.com/artist/${DDERGO_ARTIST_ID}`;
+// Self-hosted copy of DDERGO's Spotify profile photo (pulled from Spotify's
+// oEmbed thumbnail). Used as the player's default art so the dock stays fast
+// and doesn't depend on Spotify's CDN at build or runtime.
+export const DDERGO_ARTIST_IMG = '/ddergo-artist.jpg';
