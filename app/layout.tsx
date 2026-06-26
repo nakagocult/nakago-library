@@ -6,6 +6,7 @@ import NavBar from '@/components/shared/NavBar';
 import IntroScreen from '@/components/shared/IntroScreen';
 import WordLineageFooter from '@/components/shared/WordLineageFooter';
 import RadioDock from '@/components/shared/RadioDock';
+import BootCover from '@/components/shared/BootCover';
 import { getDdergoTracks } from '@/lib/ddergo-tracks';
 
 export const metadata: Metadata = {
@@ -28,6 +29,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Boot curtain — pure inline CSS so it paints on the very first frame,
+            before the stylesheet bundle, React, or the wallet providers exist.
+            The #boot-cover div below sits on top of everything; <BootCover/>
+            fades it out once hydration settles. The animation is a fail-safe:
+            if JS never loads, the curtain still fades on its own after 4s rather
+            than leaving a blank black screen. */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `#boot-cover{position:fixed;inset:0;z-index:100000;background:#000;pointer-events:none;opacity:1;animation:boot-fade .6s ease 4s forwards}#boot-cover.boot-hidden{opacity:0;transition:opacity .4s ease;animation:none}@keyframes boot-fade{to{opacity:0}}`,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -36,6 +48,8 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-[#0a0a0a] text-white antialiased overflow-x-hidden">
+        <div id="boot-cover" aria-hidden />
+        <BootCover />
         <AuroraBackground />
         <Providers>
           <IntroScreen />
