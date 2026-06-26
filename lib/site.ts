@@ -1,7 +1,7 @@
 // Shared site-wide constants (mascot art, social links).
 // Recreated from the original constants.ts for the multi-page rebuild.
 
-export const MASCOT_URL = 'https://i.ibb.co/B8zQgxk/IMG-7857.jpg';
+export const MASCOT_URL = '/naka-mascot.jpg';
 
 export const SOCIAL_LINKS = {
   telegram: 'https://t.me/NakaGoInu',
