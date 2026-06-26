@@ -36,8 +36,8 @@ export default function MosaicPage() {
           <span className="text-gradient-fire">MOSAIC</span>
         </h1>
         <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/45">
-          Each cycle, every hooman&apos;s fragment becomes its own universe — then they&apos;re torn
-          together at the seams into a single monthly weave. No shared style. Maximum clash.
+          Each cycle, every hooman&apos;s mosaic fragment becomes its own universe — then they&apos;re
+          stitched together at the seams into a single monthly weave.
         </p>
       </div>
 
