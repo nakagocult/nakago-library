@@ -12,16 +12,15 @@
 
 // Public Blob read prefix (the plan's `publish_base_url`), e.g.
 //   https://<store>.public.blob.vercel-storage.com/mosaics
-// and which gated chat's mosaic to surface on the site.
+// The site shows one global monthly mosaic — the bot publishes a single
+// `latest.json` at this base, not a per-chat pointer.
 export const MOSAIC_BASE_URL = process.env.NEXT_PUBLIC_MOSAIC_BASE_URL ?? '';
-export const MOSAIC_CHAT_ID = process.env.NEXT_PUBLIC_MOSAIC_CHAT_ID ?? '';
 
 /** Minimal published pointer the page hits first. */
 export interface MosaicLatest {
-  chat_id: string | number;
   cycle_date: string; // yyyymmdd
-  base: string; // "<chat_id>/<cycle_date>/"
-  manifest: string; // "<chat_id>/<cycle_date>/manifest.json"
+  base: string; // "<cycle_date>/"
+  manifest: string; // "<cycle_date>/manifest.json"
 }
 
 export interface MosaicTile {
@@ -48,7 +47,6 @@ export interface MosaicManifest {
 /** Everything the page needs, with every URL already absolute. */
 export interface ResolvedMosaic {
   cycleDate: string;
-  chatId: string;
   rows: number;
   cols: number;
   compositeSrc: string;
@@ -75,11 +73,9 @@ export function formatCycle(cycleDate: string): string {
  * network / parse failures so the page can offer a retry.
  */
 export async function loadLatestMosaic(): Promise<ResolvedMosaic | null> {
-  if (!MOSAIC_BASE_URL || !MOSAIC_CHAT_ID) return null; // unconfigured
+  if (!MOSAIC_BASE_URL) return null; // unconfigured
 
-  const pointer = await fetch(joinUrl(MOSAIC_BASE_URL, `latest/${MOSAIC_CHAT_ID}.json`), {
-    cache: 'no-store',
-  });
+  const pointer = await fetch(joinUrl(MOSAIC_BASE_URL, 'latest.json'), { cache: 'no-store' });
   if (pointer.status === 404) return null; // no cycle woven yet
   if (!pointer.ok) throw new Error(`Mosaic pointer responded ${pointer.status}`);
   const latest = (await pointer.json()) as MosaicLatest;
@@ -92,7 +88,6 @@ export async function loadLatestMosaic(): Promise<ResolvedMosaic | null> {
 
   return {
     cycleDate: latest.cycle_date,
-    chatId: String(latest.chat_id),
     rows: manifest.rows,
     cols: manifest.cols,
     compositeSrc: joinUrl(cycleBase, manifest.composite ?? 'composite.png'),
