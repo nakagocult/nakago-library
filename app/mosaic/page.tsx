@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Grid3x3, Image as ImageIcon, Loader2, AlertTriangle, Sparkles } from 'lucide-react';
@@ -168,13 +169,17 @@ function CompositeView({ data }: { data: ResolvedMosaic }) {
       href={data.compositeSrc}
       target="_blank"
       rel="noopener noreferrer"
-      className="block overflow-hidden rounded-2xl"
-      style={{ border: '1px solid rgba(255,77,0,0.2)', background: 'rgba(0,0,0,0.5)' }}
+      className="relative block w-full overflow-hidden rounded-2xl"
+      style={{ aspectRatio: `${data.cols} / ${data.rows}`, border: '1px solid rgba(255,77,0,0.2)', background: 'rgba(0,0,0,0.5)' }}
       title="Open full resolution"
     >
-      {/* External, env-driven Blob host — next/image is locked to local patterns here. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={data.compositeSrc} alt={`Mosaic weave — ${formatCycle(data.cycleDate)}`} className="w-full" loading="lazy" />
+      <Image
+        src={data.compositeSrc}
+        alt={`Mosaic weave — ${formatCycle(data.cycleDate)}`}
+        fill
+        className="object-contain"
+        sizes="(max-width: 768px) 100vw, 1024px"
+      />
     </motion.a>
   );
 }
@@ -189,19 +194,23 @@ function GridView({ data }: { data: ResolvedMosaic }) {
     }
   }
 
+  // Rendered tile width ≈ container / cols; tell next/image so it fetches a
+  // thumbnail near that size instead of the full-res PNG.
+  const sizes = `(max-width: 640px) ${Math.round(100 / data.cols)}vw, ${Math.round(1024 / data.cols)}px`;
+
   return (
     <div
       className="grid gap-2 sm:gap-3"
       style={{ gridTemplateColumns: `repeat(${data.cols}, minmax(0, 1fr))` }}
     >
       {cells.map(({ r, c, tile }) =>
-        tile ? <TileCard key={`${r}-${c}`} tile={tile} /> : <div key={`${r}-${c}`} aria-hidden />
+        tile ? <TileCard key={`${r}-${c}`} tile={tile} sizes={sizes} /> : <div key={`${r}-${c}`} aria-hidden />
       )}
     </div>
   );
 }
 
-function TileCard({ tile }: { tile: ResolvedMosaic['tiles'][number] }) {
+function TileCard({ tile, sizes }: { tile: ResolvedMosaic['tiles'][number]; sizes: string }) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.92 }}
@@ -216,27 +225,18 @@ function TileCard({ tile }: { tile: ResolvedMosaic['tiles'][number] }) {
             <AlertTriangle className="h-5 w-5" />
           </div>
         ) : (
-          <>
-            {/* External, env-driven Blob host — next/image is locked to local patterns here. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={tile.src}
-              alt={tile.fragment ? `Fragment: ${tile.fragment}` : `Tile ${tile.row},${tile.col}`}
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)' }} />
-          </>
+          <Image
+            src={tile.src}
+            alt={tile.username ? `@${tile.username}` : `Tile ${tile.row},${tile.col}`}
+            fill
+            className="object-cover"
+            sizes={sizes}
+          />
         )}
       </div>
-      {(tile.fragment || tile.username) && (
-        <div className="px-2 py-1.5">
-          {tile.fragment && (
-            <p className="truncate text-[12px] font-semibold leading-tight text-white/85" title={tile.fragment}>
-              {tile.fragment}
-            </p>
-          )}
-          {tile.username && <p className="truncate text-[10px] text-white/35">@{tile.username}</p>}
+      {tile.username && (
+        <div className="px-2 py-1.5 text-center">
+          <p className="truncate text-[11px] text-white/45">@{tile.username}</p>
         </div>
       )}
     </motion.div>
