@@ -13,6 +13,7 @@ const LINKS = [
   { href: '/', label: 'Home' },
   { href: '/claim', label: 'Claim' },
   { href: '/view', label: 'View' },
+  { href: '/mosaic', label: 'Mosaic' },
   { href: '/cawf', label: 'CAWF' },
 ];
 
