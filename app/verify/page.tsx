@@ -12,17 +12,17 @@ const PERKS = [
   {
     icon: CloudRain,
     title: 'Redeem Naka through Make It Rain',
-    text: 'Make It Rain is the faucet that rewards you for showing up and staying active.',
+    text: 'Make It Rain is the faucet that pays you to vibe with the cult.',
   },
   {
     icon: TrendingUp,
-    title: 'Boost your Make It Rain multiplier',
-    text: 'A linked wallet raises the multiplier on every Make It Rain payout you earn.',
+    title: 'Bigger Make It Rain payouts',
+    text: 'A linked wallet bumps your daily multiplier.',
   },
   {
     icon: Gem,
     title: 'Unlock NFT holder perks',
-    text: 'Hold a Naka relic and your linked wallet flips on the holder only rewards.',
+    text: 'Hold a Naka relic and the holder rewards switch on.',
   },
 ];
 
