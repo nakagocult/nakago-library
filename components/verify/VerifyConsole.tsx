@@ -341,7 +341,7 @@ function SuccessView({ result }: { result: SubmitResult }) {
         className="mt-2 rounded-2xl px-5 py-3 text-sm font-bold text-[#FF4D00]"
         style={{ background: '#FF4D000f', border: '1px solid #FF4D0033' }}
       >
-        Henk will confirm in Telegram (he is who sent the hooman here).
+        Henk will confirm in Telegram.
       </div>
     </motion.div>
   );
