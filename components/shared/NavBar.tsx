@@ -168,15 +168,19 @@ export default function NavBar() {
                   {LINKS.map((link) => {
                     const active = 'href' in link && pathname === link.href;
                     const className =
-                      'block w-full rounded-lg px-3 py-2.5 text-left text-sm font-black uppercase tracking-[0.2em] transition-colors';
-                    const style = {
-                      color: active ? '#FF4D00' : 'rgba(255,255,255,0.6)',
-                      background: active ? 'rgba(255,77,0,0.1)' : 'transparent',
-                      fontFamily: 'Bebas Neue, Impact, sans-serif',
-                    } as const;
+                      'block w-full rounded-lg px-3 py-2.5 text-left text-sm font-black uppercase tracking-[0.2em] transition-colors ' +
+                      (active
+                        ? 'bg-[#FF4D00]/10 text-[#FF4D00]'
+                        : 'text-white/60 hover:bg-white/10 hover:text-white');
 
                     return (
-                      <Link key={link.href} href={link.href} onClick={() => setMenuOpen(false)} className={className} style={style}>
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setMenuOpen(false)}
+                        className={className}
+                        style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
+                      >
                         {link.label}
                       </Link>
                     );
