@@ -88,23 +88,15 @@ export default function IntroScreen() {
           style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(255,77,0,0.18) 0%, transparent 60%)' }}
         />
 
-        {/* Skip — always available, never gated behind the last step */}
-        <button
-          type="button"
-          onClick={finish}
-          className="absolute right-4 top-6 z-10 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-white/50 transition-colors hover:text-white"
-          style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
-        >
-          Skip <X className="h-3 w-3" />
-        </button>
-
+        {/* Card + skip, stacked and centered so Skip sits just below the frame */}
+        <div className="relative z-10 flex w-full max-w-sm flex-col items-center">
         {/* Card */}
         <motion.div
           key={step}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: 'easeOut' }}
-          className="relative z-10 w-full max-w-sm rounded-3xl p-6"
+          className="w-full rounded-3xl p-6"
           style={{ background: 'rgba(17,17,17,0.85)', border: '1px solid rgba(255,77,0,0.2)', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}
         >
           <div className="mb-5 flex items-center justify-between">
@@ -178,6 +170,18 @@ export default function IntroScreen() {
             </button>
           </div>
         </motion.div>
+
+        {/* Skip — always available, never gated behind the last step; sits just
+            below the card frame. */}
+        <button
+          type="button"
+          onClick={finish}
+          className="mt-4 flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold text-white/45 transition-colors hover:text-white"
+          style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
+        >
+          Skip Intro <X className="h-3 w-3" />
+        </button>
+        </div>
       </motion.div>
     </AnimatePresence>
   );
