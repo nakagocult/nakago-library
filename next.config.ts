@@ -4,9 +4,13 @@ import type { NextConfig } from "next";
 // in the Telegram bot process, not in this app. We proxy those paths to it so the
 // browser stays same-origin (clean Origin check) and the bot host never appears in
 // client code. Set VERIFY_BACKEND_ORIGIN (e.g. https://gate.nakagocult.xyz) in the
-// Vercel project. If it's unset, the rewrite is skipped so the build can't break —
-// /api/verify/* will simply 404 until the var is set and the gate subdomain is live.
-const verifyBackend = process.env.VERIFY_BACKEND_ORIGIN?.replace(/\/$/, '');
+// Vercel project. Must be an absolute http(s):// URL — Next rejects anything else
+// as an "Invalid rewrite" and fails the whole build, so we validate here and skip
+// the rewrite on a missing/garbage value (fails safe: /api/verify/* just 404s and
+// the rest of the site still builds) rather than letting one bad env var take the
+// deploy down.
+const rawVerifyBackend = process.env.VERIFY_BACKEND_ORIGIN?.replace(/\/$/, '');
+const verifyBackend = /^https?:\/\//.test(rawVerifyBackend ?? '') ? rawVerifyBackend : undefined;
 
 const nextConfig: NextConfig = {
   images: {
