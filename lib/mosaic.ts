@@ -65,7 +65,7 @@ function joinUrl(prefix: string, path: string): string {
 // changes the cache key and forces a re-fetch. Bump this whenever an image is
 // re-rendered under an existing filename within the same cycle. (Once the bot
 // emits unique filenames per render this becomes a no-op safety net.)
-const MOSAIC_CACHE_BUST = '2';
+const MOSAIC_CACHE_BUST = '3';
 
 /** Append the cache-bust version to a resolved image URL. */
 function withBust(url: string): string {
