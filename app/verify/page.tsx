@@ -43,9 +43,9 @@ export default function VerifyPage() {
           <span className="text-gradient-fire">LINK</span> YOUR WALLET
         </h1>
         <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/45">
-          Linking ties this wallet to your SOTH (State of the Hooman), the Henk profile system.
-          Prove you control it by signing a single use message. No funds move and nothing is spent.
-          A signature is all it takes.
+          Linking ties this wallet to your SOTH (State of the Hooman) profile.
+          Prove you control it by signing a single use message. No funds move, nothing is spent, and
+          your private key never leaves your wallet. A signature is all it takes.
         </p>
       </div>
 
