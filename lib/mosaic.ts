@@ -59,6 +59,20 @@ function joinUrl(prefix: string, path: string): string {
   return `${prefix.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
 }
 
+// Vercel's Image Optimization cache is keyed on the source URL and survives
+// redeploys, so when the bot overwrites a tile/composite at the *same* filename
+// the page keeps serving the stale optimized copy. Appending a version query
+// changes the cache key and forces a re-fetch. Bump this whenever an image is
+// re-rendered under an existing filename within the same cycle. (Once the bot
+// emits unique filenames per render this becomes a no-op safety net.)
+const MOSAIC_CACHE_BUST = '1';
+
+/** Append the cache-bust version to a resolved image URL. */
+function withBust(url: string): string {
+  if (!MOSAIC_CACHE_BUST) return url;
+  return `${url}${url.includes('?') ? '&' : '?'}v=${encodeURIComponent(MOSAIC_CACHE_BUST)}`;
+}
+
 /** Pretty-print a yyyymmdd cycle key as e.g. "June 2026". */
 export function formatCycle(cycleDate: string): string {
   const m = /^(\d{4})(\d{2})(\d{2})$/.exec(cycleDate);
@@ -90,7 +104,7 @@ export async function loadLatestMosaic(): Promise<ResolvedMosaic | null> {
     cycleDate: latest.cycle_date,
     rows: manifest.rows,
     cols: manifest.cols,
-    compositeSrc: joinUrl(cycleBase, manifest.composite ?? 'composite.png'),
-    tiles: (manifest.tiles ?? []).map((t) => ({ ...t, src: joinUrl(cycleBase, t.file) })),
+    compositeSrc: withBust(joinUrl(cycleBase, manifest.composite ?? 'composite.png')),
+    tiles: (manifest.tiles ?? []).map((t) => ({ ...t, src: withBust(joinUrl(cycleBase, t.file)) })),
   };
 }
