@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useLayoutEffect, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -41,6 +42,12 @@ export default function IntroScreen() {
   const [step, setStep] = useState(0);
   const [dismissed, setDismissed] = useState(false);
 
+  // The intro never runs on the wallet verification flow — it lands from a
+  // Telegram deep link with a short-lived nonce, so a full-screen takeover
+  // would just burn the user's time before they can sign.
+  const pathname = usePathname();
+  const suppressed = pathname?.startsWith('/verify') ?? false;
+
   useLayoutEffect(() => {
     // Must run synchronously before paint — deferring this to a microtask
     // would let the intro flash for returning visitors for one frame.
@@ -51,10 +58,10 @@ export default function IntroScreen() {
   // Hide the always-mounted AuroraBackground while the intro covers the screen.
   // It's invisible behind the opaque overlay but still burns GPU otherwise.
   useEffect(() => {
-    const active = !skip && !dismissed;
+    const active = !skip && !dismissed && !suppressed;
     document.body.classList.toggle('intro-active', active);
     return () => document.body.classList.remove('intro-active');
-  }, [skip, dismissed]);
+  }, [skip, dismissed, suppressed]);
 
   const finish = () => {
     sessionStorage.setItem('naka_intro_done', '1');
@@ -67,7 +74,7 @@ export default function IntroScreen() {
     else setStep((s) => s + 1);
   };
 
-  if (skip || dismissed) return null;
+  if (skip || dismissed || suppressed) return null;
 
   const current = STEPS[step];
 

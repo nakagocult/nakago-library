@@ -335,7 +335,7 @@ function SuccessView({ result }: { result: SubmitResult }) {
           </>
         ) : (
           <>
-            It&apos;s on your profile now. No Naka relic found in it yet — hold one to unlock holder
+            It&apos;s on your SOTH now. No Naka relic found in it yet, so hold one to unlock holder
             perks.
           </>
         )}
@@ -345,7 +345,7 @@ function SuccessView({ result }: { result: SubmitResult }) {
         className="mt-2 rounded-2xl px-5 py-3 text-sm font-bold text-[#FF4D00]"
         style={{ background: '#FF4D000f', border: '1px solid #FF4D0033' }}
       >
-        Return to Telegram — Naka will confirm.
+        Return to Telegram and Naka will confirm.
       </div>
     </motion.div>
   );
