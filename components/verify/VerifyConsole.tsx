@@ -319,7 +319,7 @@ function SuccessView({ result }: { result: SubmitResult }) {
         className="text-3xl font-black text-white"
         style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
       >
-        Wallet Linked
+        It is done
       </h2>
 
       <p className="flex items-center gap-1.5 text-sm font-bold text-white/70">
@@ -329,14 +329,10 @@ function SuccessView({ result }: { result: SubmitResult }) {
 
       <p className="max-w-sm text-sm leading-relaxed text-white/50">
         {hasHoldings ? (
-          <>
-            Holds <span className="font-bold text-white/75">{result.holder.join(', ')}</span>. Holder
-            perks are unlocked.
-          </>
+          <>Bound to your SOTH, and your holder mark is set.</>
         ) : (
           <>
-            It&apos;s on your SOTH now. No Naka relic found in it yet, so hold one to unlock holder
-            perks.
+            Bound to your SOTH. No Naka relic in it yet, so grab one to set your holder mark.
           </>
         )}
       </p>
@@ -345,7 +341,7 @@ function SuccessView({ result }: { result: SubmitResult }) {
         className="mt-2 rounded-2xl px-5 py-3 text-sm font-bold text-[#FF4D00]"
         style={{ background: '#FF4D000f', border: '1px solid #FF4D0033' }}
       >
-        Return to Telegram and Naka will confirm.
+        Henk will confirm in Telegram (he is who sent the hooman here).
       </div>
     </motion.div>
   );
