@@ -79,6 +79,7 @@ export default function NavBar() {
   const pathname = usePathname();
   const [imgError, setImgError] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hovered, setHovered] = useState<string | null>(null);
 
   return (
     <nav
@@ -166,20 +167,26 @@ export default function NavBar() {
                   style={{ background: 'rgba(17,17,17,0.92)', border: '1px solid rgba(255,77,0,0.2)', boxShadow: '0 12px 40px rgba(0,0,0,0.5)' }}
                 >
                   {LINKS.map((link) => {
-                    const active = 'href' in link && pathname === link.href;
-                    const className =
-                      'block w-full rounded-lg px-3 py-2.5 text-left text-sm font-black uppercase tracking-[0.2em] transition-colors ' +
-                      (active
-                        ? 'bg-[#FF4D00]/10 text-[#FF4D00]'
-                        : 'text-white/60 hover:bg-white/10 hover:text-white');
+                    const active = pathname === link.href;
+                    const hot = hovered === link.href;
 
                     return (
                       <Link
                         key={link.href}
                         href={link.href}
                         onClick={() => setMenuOpen(false)}
-                        className={className}
-                        style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
+                        onMouseEnter={() => setHovered(link.href)}
+                        onMouseLeave={() => setHovered((h) => (h === link.href ? null : h))}
+                        className="block w-full rounded-lg px-3 py-2.5 text-left text-sm font-black uppercase tracking-[0.2em] transition-colors"
+                        style={{
+                          color: active ? '#FF4D00' : hot ? '#FFFFFF' : 'rgba(255,255,255,0.6)',
+                          background: active
+                            ? 'rgba(255,77,0,0.1)'
+                            : hot
+                              ? 'rgba(255,255,255,0.08)'
+                              : 'transparent',
+                          fontFamily: 'Bebas Neue, Impact, sans-serif',
+                        }}
                       >
                         {link.label}
                       </Link>
