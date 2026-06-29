@@ -15,6 +15,7 @@ const LINKS = [
   { href: '/view', label: 'View' },
   { href: '/mosaic', label: 'Mosaic' },
   { href: '/cawf', label: 'CAWF' },
+  { href: '/rain', label: 'Rain' },
 ];
 
 const TelegramIcon = () => (
