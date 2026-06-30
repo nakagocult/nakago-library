@@ -5,7 +5,13 @@ import { Copy, Check } from 'lucide-react';
 
 const CONTRACT = '0x6967b9a8c0b14849CFE8f9E5732B401433fD2898';
 
-export default function CopyAddress({ address = CONTRACT }: { address?: string }) {
+export default function CopyAddress({
+  address = CONTRACT,
+  compact = false,
+}: {
+  address?: string;
+  compact?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
 
   const head = address.slice(0, 6);
@@ -20,6 +26,29 @@ export default function CopyAddress({ address = CONTRACT }: { address?: string }
       /* clipboard unavailable — silently ignore */
     }
   };
+
+  // Square, icon-only variant for the condensed mobile bar.
+  if (compact) {
+    return (
+      <button
+        type="button"
+        onClick={handleCopy}
+        title={copied ? 'Copied!' : 'Copy contract address'}
+        aria-label="Copy contract address"
+        className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
+        style={{
+          background: 'rgba(255,255,255,0.05)',
+          border: `1px solid ${copied ? 'rgba(0,255,136,0.4)' : 'rgba(255,77,0,0.25)'}`,
+        }}
+      >
+        {copied ? (
+          <Check className="h-4 w-4 text-[#00FF88]" />
+        ) : (
+          <Copy className="h-4 w-4 text-[#FF4D00]" />
+        )}
+      </button>
+    );
+  }
 
   return (
     <button

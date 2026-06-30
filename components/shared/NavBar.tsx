@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Wallet } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { MASCOT_URL, SOCIAL_LINKS } from '@/lib/site';
 import CopyAddress from '@/components/shared/CopyAddress';
@@ -25,9 +25,9 @@ const XIcon = () => (
   </svg>
 );
 
-/** Contract + Buy $NAKA + socials — the promoted primary actions. On the cramped
-    mobile bar the socials are dropped (they live in the menu instead via `socials={false}`). */
-function PrimaryFeatures({ socials = true }: { socials?: boolean }) {
+/** Contract + Buy $NAKA + socials — the promoted primary actions. Desktop only;
+    the mobile bar uses the condensed inline controls instead. */
+function PrimaryFeatures() {
   return (
     <div
       className="flex items-center gap-2 rounded-full p-1"
@@ -48,31 +48,61 @@ function PrimaryFeatures({ socials = true }: { socials?: boolean }) {
       >
         Buy $NAKA
       </a>
-      {socials && (
-        <>
-          <a
-            href={SOCIAL_LINKS.telegram}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Telegram"
-            className="rounded-full p-2 text-white/60 transition-colors hover:bg-[#0088cc]/20 hover:text-[#0088cc]"
-            style={{ background: 'rgba(255,255,255,0.05)' }}
-          >
-            <TelegramIcon />
-          </a>
-          <a
-            href={SOCIAL_LINKS.twitter}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="X / Twitter"
-            className="rounded-full p-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-            style={{ background: 'rgba(255,255,255,0.05)' }}
-          >
-            <XIcon />
-          </a>
-        </>
-      )}
+      <a
+        href={SOCIAL_LINKS.telegram}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Telegram"
+        className="rounded-full p-2 text-white/60 transition-colors hover:bg-[#0088cc]/20 hover:text-[#0088cc]"
+        style={{ background: 'rgba(255,255,255,0.05)' }}
+      >
+        <TelegramIcon />
+      </a>
+      <a
+        href={SOCIAL_LINKS.twitter}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="X / Twitter"
+        className="rounded-full p-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+        style={{ background: 'rgba(255,255,255,0.05)' }}
+      >
+        <XIcon />
+      </a>
     </div>
+  );
+}
+
+/** Square, icon-only wallet button for the condensed mobile bar. Wraps RainbowKit's
+    headless ConnectButton so it still opens the connect/account modals. */
+function CompactConnect() {
+  return (
+    <ConnectButton.Custom>
+      {({ account, chain, openConnectModal, openAccountModal, openChainModal, mounted }) => {
+        const connected = mounted && !!account && !!chain;
+        const onClick = !connected
+          ? openConnectModal
+          : chain?.unsupported
+            ? openChainModal
+            : openAccountModal;
+        return (
+          <button
+            type="button"
+            onClick={onClick}
+            aria-label={connected ? 'Wallet account' : 'Connect wallet'}
+            title={connected ? account?.displayName : 'Connect wallet'}
+            className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
+            style={{
+              background: connected ? 'rgba(255,77,0,0.12)' : 'rgba(255,255,255,0.05)',
+              border: `1px solid ${connected ? 'rgba(255,77,0,0.4)' : 'rgba(255,255,255,0.12)'}`,
+              color: connected ? '#FF4D00' : 'rgba(255,255,255,0.7)',
+              opacity: mounted ? 1 : 0,
+            }}
+          >
+            <Wallet className="h-4 w-4" />
+          </button>
+        );
+      }}
+    </ConnectButton.Custom>
   );
 }
 
@@ -124,8 +154,29 @@ export default function NavBar() {
         </div>
 
         {/* Right side: wallet + menu */}
-        <div className="flex items-center gap-2">
-          <div className="shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Mobile: condensed one-line controls (contract + buy + square connect) */}
+          <div className="flex items-center gap-1.5 md:hidden">
+            <CopyAddress compact />
+            <a
+              href={SOCIAL_LINKS.uniswap}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg px-3 py-2 text-[11px] font-bold text-white"
+              style={{
+                background: 'linear-gradient(135deg, #FF4D00, #FF0000)',
+                boxShadow: '0 0 14px rgba(255,77,0,0.5)',
+                fontFamily: 'Bebas Neue, Impact, sans-serif',
+                letterSpacing: '0.06em',
+              }}
+            >
+              Buy $NAKA
+            </a>
+            <CompactConnect />
+          </div>
+
+          {/* Desktop: full wallet button */}
+          <div className="hidden shrink-0 md:block">
             <ConnectButton accountStatus="address" chainStatus="none" showBalance={false} />
           </div>
 
@@ -226,14 +277,6 @@ export default function NavBar() {
           </AnimatePresence>
           </div>
         </div>
-      </div>
-
-      {/* Primary features — second row on small screens */}
-      <div
-        className="flex items-center justify-center border-t px-4 py-2 md:hidden"
-        style={{ borderColor: 'rgba(255,77,0,0.1)' }}
-      >
-        <PrimaryFeatures socials={false} />
       </div>
     </nav>
   );
