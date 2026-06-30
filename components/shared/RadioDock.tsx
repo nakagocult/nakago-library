@@ -76,20 +76,18 @@ export default function RadioDock({ tracks }: { tracks: RadioTrack[] }) {
     }
   }, [hasTracks, index, isPlaying, play, shuffle, pickRandom]);
 
-  // Reveal once the intro is gone; also let anything dispatch naka:play-random
-  // (nav "Radio" item, etc.) to wake + shuffle-start the dock.
+  // Reveal on mount (the intro screen that used to gate this was removed); also
+  // let anything dispatch naka:play-random (nav "Radio" item, etc.) to wake +
+  // shuffle-start the dock. Deferred to a microtask to avoid a sync setState.
   useEffect(() => {
-    const onReady = () => setReady(true);
-    if (sessionStorage.getItem('naka_intro_done')) Promise.resolve().then(onReady);
+    Promise.resolve().then(() => setReady(true));
     const onPlayRandom = () => {
       setReady(true);
       setShuffle(true);
       play(pickRandom());
     };
-    window.addEventListener('naka:intro-done', onReady);
     window.addEventListener('naka:play-random', onPlayRandom);
     return () => {
-      window.removeEventListener('naka:intro-done', onReady);
       window.removeEventListener('naka:play-random', onPlayRandom);
     };
   }, [play, pickRandom]);

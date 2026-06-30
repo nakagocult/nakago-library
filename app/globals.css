@@ -181,10 +181,6 @@ body {
 .animate-stagger-pop { animation: staggerPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 .animate-orb-float { animation: orbFloat 8s ease-in-out infinite; }
 
-/* While the intro overlay is up it fully covers the screen, so drop the aurora
-   field entirely — display:none stops the browser compositing its blurred blobs,
-   spinning conic gradient and blend-mode noise (a real cost in mobile webviews). */
-body.intro-active .aurora-field { display: none; }
 .animate-pulse-ring { animation: pulseRing 1.5s ease-out infinite; }
 .vinyl-disc { animation: vinylSpin 3.5s linear infinite; }
 

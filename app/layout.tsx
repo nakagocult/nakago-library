@@ -3,7 +3,6 @@ import './globals.css';
 import { Providers } from './providers';
 import AuroraBackground from '@/components/shared/AuroraBackground';
 import NavBar from '@/components/shared/NavBar';
-import IntroScreen from '@/components/shared/IntroScreen';
 import WordLineageFooter from '@/components/shared/WordLineageFooter';
 import RadioDock from '@/components/shared/RadioDock';
 import BootCover from '@/components/shared/BootCover';
@@ -52,7 +51,6 @@ export default function RootLayout({
         <BootCover />
         <AuroraBackground />
         <Providers>
-          <IntroScreen />
           <NavBar />
           {children}
           <WordLineageFooter />

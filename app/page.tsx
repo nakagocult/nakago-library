@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Gem, Images, ArrowRight, Coins, Percent, Flame, ShieldCheck } from 'lucide-react';
+import { Gem, Images, ArrowRight, ArrowUpRight, Coins, Percent, Flame, ShieldCheck, CloudRain, Grid2x2, Leaf } from 'lucide-react';
 import { MASCOT_URL, SOCIAL_LINKS } from '@/lib/site';
 
 // Hero stats are lore-only — token facts live in the NAKAnomics band below.
@@ -26,6 +26,15 @@ const TOKENOMICS = [
   { icon: Percent, value: '0/0', label: 'Buy / Sell Tax' },
   { icon: Flame, value: 'Burnt', label: 'Liquidity Locked' },
   { icon: ShieldCheck, value: 'Renounced', label: 'Contract Ownership' },
+];
+
+// The site map — every destination beyond the hub, one card each.
+const EXPLORE = [
+  { href: '/claim', icon: Gem, title: 'Claim', text: 'Mint the NIPPO and Founder Pass drops, live on-chain.' },
+  { href: '/view', icon: Images, title: 'View', text: 'Browse your Naka relics and holdings.' },
+  { href: '/mosaic', icon: Grid2x2, title: 'Mosaic', text: "Each cycle, every hooman's fragment becomes its own universe." },
+  { href: '/cawf', icon: Leaf, title: 'CAWF', text: 'Clean air, water, and food. The Cult mission.' },
+  { href: '/rain', icon: CloudRain, title: 'Make It Rain', text: 'Earn 💧rain by vibing, redeem for real Naka.' },
 ];
 
 export default function HomePage() {
@@ -175,6 +184,47 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Explore — the site map */}
+      <section className="relative z-10 mx-auto max-w-5xl px-4 py-16 sm:py-20">
+        <SectionHeading kicker="The Ecosystem" title="Explore The Cult" />
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {EXPLORE.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={item.href}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: i * 0.06 }}
+              >
+                <Link
+                  href={item.href}
+                  className="group flex h-full flex-col rounded-2xl border border-[#FF4D00]/15 bg-white/[0.03] p-5 transition-colors hover:border-[#FF4D00]/40 hover:bg-white/[0.05]"
+                >
+                  <div className="flex items-center justify-between">
+                    <span
+                      className="flex h-10 w-10 items-center justify-center rounded-xl"
+                      style={{ background: '#FF4D0014', border: '1px solid #FF4D0033' }}
+                    >
+                      <Icon className="h-5 w-5 text-[#FF4D00]" />
+                    </span>
+                    <ArrowUpRight className="h-4 w-4 text-white/25 transition-colors group-hover:text-[#FF4D00]" />
+                  </div>
+                  <div
+                    className="mt-4 text-2xl font-black text-white"
+                    style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
+                  >
+                    {item.title}
+                  </div>
+                  <p className="mt-1 text-sm leading-relaxed text-white/50">{item.text}</p>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
       {/* Timeline — the legend in four beats */}
       <section className="relative z-10 mx-auto max-w-5xl px-4 py-16 sm:py-20">
         <SectionHeading kicker="The Legend" title="A Breed Saved" />
@@ -210,7 +260,7 @@ export default function HomePage() {
 
       {/* NAKAnomics — trust badges */}
       <section className="relative z-10 mx-auto max-w-5xl px-4 pb-24 pt-4 sm:pb-28">
-        <SectionHeading kicker="NAKAnomics" title="Fair By Design" />
+        <SectionHeading kicker="$NAKA" title="NAKAnomics" />
         <div className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {TOKENOMICS.map((item, i) => {
             const Icon = item.icon;
@@ -242,8 +292,7 @@ export default function HomePage() {
           })}
         </div>
         <p className="mx-auto mt-6 max-w-md text-center text-xs leading-relaxed text-white/35">
-          Fair launch — no presale, no team tokens, no special allocations. Every holder started
-          from the same line.
+          No team tokens, no special allocations. Every holder started from the same line.
         </p>
         <div className="mt-8 flex justify-center">
           <a
