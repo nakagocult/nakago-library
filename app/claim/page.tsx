@@ -130,41 +130,33 @@ export default function ClaimPage() {
   );
 }
 
-/** The actionable tile: card image, live progress, and the claim console. */
+/** The actionable tile: drop header, live progress, and the claim console. */
 function ClaimBox({ entry }: { entry: DropEntry }) {
-  const { drop, maxPerTx, badge, cardImage } = entry;
+  const { drop, maxPerTx, badge } = entry;
   const stats = useDropStats(drop);
 
   return (
     <article
-      className="glass-card flex h-full flex-col overflow-hidden"
+      className="glass-card flex h-full flex-col p-6"
       style={{ borderColor: `${drop.accent[0]}30` }}
     >
-      {/* Card image */}
-      <div className="relative h-48 w-full overflow-hidden">
-        <Image
-          src={cardImage}
-          alt={drop.title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: `linear-gradient(to top, rgba(10,10,10,0.85) 0%, transparent 60%)` }}
-        />
-        <div className="absolute bottom-3 left-4">
-          <span
-            className="rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest"
-            style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40`, color: drop.accent[0], fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
-          >
-            {badge}
-          </span>
-        </div>
-      </div>
+      {/* Header */}
+      <span
+        className="mb-3 inline-flex w-fit rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest"
+        style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40`, color: drop.accent[0], fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif' }}
+      >
+        {badge}
+      </span>
+      <h2
+        className="text-3xl font-black leading-tight text-white"
+        style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
+      >
+        {drop.title}
+      </h2>
+      <p className="mt-1 text-sm text-white/45">{drop.tagline}</p>
 
       {/* Progress */}
-      <div className="mx-6 mb-4 mt-6 rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+      <div className="mt-5 rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
         <MintProgress
           claimed={stats.claimed}
           total={stats.total}
@@ -175,40 +167,53 @@ function ClaimBox({ entry }: { entry: DropEntry }) {
       </div>
 
       {/* Claim console */}
-      <div className="mt-auto p-6 pt-0">
+      <div className="mt-auto pt-5">
         <ClaimConsole drop={drop} maxPerTx={maxPerTx} />
       </div>
     </article>
   );
 }
 
-/** The descriptive side: floating title + perks checklist, vertically centered to the claim box. */
+/** The descriptive side: drop art as a dimmed backdrop with the perks checklist over it. */
 function PerksPanel({ entry }: { entry: DropEntry }) {
-  const { drop, perks } = entry;
+  const { drop, cardImage, perks } = entry;
 
   return (
-    <div className="flex h-full flex-col justify-center px-2 py-8 sm:px-6">
-      <h2
-        className="text-4xl font-black leading-tight text-white"
-        style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
-      >
-        {drop.title}
-      </h2>
-      <p className="mt-1 text-sm text-white/45">{drop.tagline}</p>
+    <div
+      className="relative flex h-full flex-col justify-center overflow-hidden rounded-3xl p-7 sm:p-9"
+      style={{ border: `1px solid ${drop.accent[0]}20` }}
+    >
+      {/* Drop art, dimmed into the background */}
+      <Image
+        src={cardImage}
+        alt={drop.title}
+        fill
+        className="object-cover opacity-40"
+        sizes="(max-width: 768px) 100vw, 50vw"
+      />
+      <div
+        className="absolute inset-0"
+        style={{ background: 'linear-gradient(180deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.82) 100%)' }}
+      />
 
-      <ul className="mt-6 flex flex-col gap-3.5">
-        {perks.map((perk, i) => (
-          <li key={i} className="flex items-start gap-3 text-[15px] leading-relaxed text-white/75">
-            <span
-              className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
-              style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40` }}
-            >
-              <Check className="h-3 w-3" style={{ color: drop.accent[0] }} />
-            </span>
-            {perk}
-          </li>
-        ))}
-      </ul>
+      <div className="relative">
+        <span className="mb-4 block text-[11px] font-black uppercase tracking-[0.25em] text-white/45">
+          What You Get
+        </span>
+        <ul className="flex flex-col gap-3.5">
+          {perks.map((perk, i) => (
+            <li key={i} className="flex items-start gap-3 text-[15px] leading-relaxed text-white/85">
+              <span
+                className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full backdrop-blur-sm"
+                style={{ background: `${drop.accent[0]}26`, border: `1px solid ${drop.accent[0]}55` }}
+              >
+                <Check className="h-3 w-3" style={{ color: drop.accent[0] }} />
+              </span>
+              {perk}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
