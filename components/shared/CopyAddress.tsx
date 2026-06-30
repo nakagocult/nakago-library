@@ -27,7 +27,7 @@ export default function CopyAddress({
     }
   };
 
-  // Square, icon-only variant for the condensed mobile bar.
+  // Condensed "CA 0x69…2898" pill for the single-line mobile bar.
   if (compact) {
     return (
       <button
@@ -35,16 +35,27 @@ export default function CopyAddress({
         onClick={handleCopy}
         title={copied ? 'Copied!' : 'Copy contract address'}
         aria-label="Copy contract address"
-        className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors"
+        className="group inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 transition-colors"
         style={{
           background: 'rgba(255,255,255,0.05)',
           border: `1px solid ${copied ? 'rgba(0,255,136,0.4)' : 'rgba(255,77,0,0.25)'}`,
         }}
       >
+        <span
+          className="text-[10px] font-black uppercase tracking-[0.15em] text-[#FF4D00]"
+          style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
+        >
+          CA
+        </span>
+        <span className="flex items-center gap-0.5 text-[11px] text-white/70" style={{ fontFamily: "'Noto Serif JP', serif" }}>
+          {address.slice(0, 4)}
+          <span className="text-white/25">…</span>
+          {tail}
+        </span>
         {copied ? (
-          <Check className="h-4 w-4 text-[#00FF88]" />
+          <Check className="h-3.5 w-3.5 text-[#00FF88]" />
         ) : (
-          <Copy className="h-4 w-4 text-[#FF4D00]" />
+          <Copy className="h-3.5 w-3.5 text-white/40 transition-colors group-hover:text-[#FF4D00]" />
         )}
       </button>
     );
