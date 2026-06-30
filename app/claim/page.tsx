@@ -34,6 +34,7 @@ const DROPS: DropEntry[] = [
       </>,
       "Token credits toward henk's art generators",
       'Lifetime access to Cult features across the swarm',
+      'Tap in to the community',
       '10 Rare Boi pedigrees in the drop',
     ],
   },
@@ -53,12 +54,14 @@ const DROPS: DropEntry[] = [
 
 const [NIPPO_ENTRY, FOUNDER_ENTRY] = DROPS;
 
-// Diagonal stagger: NIPPO claim (TL) · NIPPO perks (TR) · Founder perks (BL) · Founder claim (BR)
-const CELLS: Array<{ kind: 'claim' | 'perks'; entry: DropEntry }> = [
-  { kind: 'claim', entry: NIPPO_ENTRY },
-  { kind: 'perks', entry: NIPPO_ENTRY },
-  { kind: 'perks', entry: FOUNDER_ENTRY },
-  { kind: 'claim', entry: FOUNDER_ENTRY },
+// Source order is mobile (single column): claim → perks → claim → perks.
+// On md+ the `mdOrder` classes swap the second row so the claim boxes land on the
+// diagonal: NIPPO claim (TL) · NIPPO perks (TR) · Founder perks (BL) · Founder claim (BR).
+const CELLS: Array<{ kind: 'claim' | 'perks'; entry: DropEntry; mdOrder: string }> = [
+  { kind: 'claim', entry: NIPPO_ENTRY, mdOrder: 'md:order-1' },
+  { kind: 'perks', entry: NIPPO_ENTRY, mdOrder: 'md:order-2' },
+  { kind: 'claim', entry: FOUNDER_ENTRY, mdOrder: 'md:order-4' },
+  { kind: 'perks', entry: FOUNDER_ENTRY, mdOrder: 'md:order-3' },
 ];
 
 export default function ClaimPage() {
@@ -101,7 +104,7 @@ export default function ClaimPage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="h-full"
+            className={`h-full ${cell.mdOrder}`}
           >
             {cell.kind === 'claim' ? (
               <ClaimBox entry={cell.entry} />
@@ -179,33 +182,23 @@ function ClaimBox({ entry }: { entry: DropEntry }) {
   );
 }
 
-/** The descriptive tile: drop title, tagline, and the perks checklist. */
+/** The descriptive side: floating title + perks checklist, vertically centered to the claim box. */
 function PerksPanel({ entry }: { entry: DropEntry }) {
-  const { drop, badge, perks } = entry;
+  const { drop, perks } = entry;
 
   return (
-    <article
-      className="glass-card flex h-full flex-col p-6 sm:p-8"
-      style={{ borderColor: `${drop.accent[0]}30` }}
-    >
-      <span
-        className="mb-4 inline-flex w-fit rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest"
-        style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40`, color: drop.accent[0], fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif' }}
-      >
-        {badge}
-      </span>
-
+    <div className="flex h-full flex-col justify-center px-2 py-8 sm:px-6">
       <h2
-        className="text-3xl font-black leading-tight text-white"
+        className="text-4xl font-black leading-tight text-white"
         style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
       >
         {drop.title}
       </h2>
       <p className="mt-1 text-sm text-white/45">{drop.tagline}</p>
 
-      <ul className="mt-6 flex flex-col gap-3">
+      <ul className="mt-6 flex flex-col gap-3.5">
         {perks.map((perk, i) => (
-          <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/70">
+          <li key={i} className="flex items-start gap-3 text-[15px] leading-relaxed text-white/75">
             <span
               className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
               style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40` }}
@@ -216,6 +209,6 @@ function PerksPanel({ entry }: { entry: DropEntry }) {
           </li>
         ))}
       </ul>
-    </article>
+    </div>
   );
 }

@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
-import { CloudRain, Droplets, Send, Sparkles, Gauge, Moon, Coins, Heart } from 'lucide-react';
+import { CloudRain, Send } from 'lucide-react';
+import RainFaq from '@/components/rain/RainFaq';
+import TelegramIcon from '@/components/shared/TelegramIcon';
 
 export const metadata: Metadata = {
   title: 'Make It Rain | NAKA GO 中号',
-  description: 'henk is paying hoomans to show up. Vibe, earn rain, redeem for real naka.',
+  description: 'Henk is paying hoomans to show up. Vibe, earn rain, redeem for real naka.',
 };
 
 const TELEGRAM = 'https://t.me/NakaGoInu';
@@ -11,50 +13,7 @@ const TELEGRAM = 'https://t.me/NakaGoInu';
 const STEPS = [
   { n: '1', title: 'Join the Telegram', text: 'Tap in to the cult chat.' },
   { n: '2', title: 'Send /nom', text: 'Drop it straight into the chat.' },
-  { n: '3', title: 'henk shows you the way', text: "That's it. You're earning rain." },
-];
-
-const FAQ = [
-  {
-    icon: Droplets,
-    q: 'What is Naka Rain?',
-    a: 'Points you earn just by connecting with the cult, playing with henk, and making art. Rain accrues daily and redeems for real Naka tokens.',
-  },
-  {
-    icon: Sparkles,
-    q: 'Can I earn right now?',
-    a: 'Yes, rain is live today. Up to thousands per day as your 💧x multiplier climbs. Every /nom you roll earns one rain, other factors push the rest.',
-  },
-  {
-    icon: Coins,
-    q: 'When do I get it?',
-    a: 'Rain vests for two weeks. In mid July the 10,000,000 Naka pool opens to redeem.',
-  },
-  {
-    icon: Send,
-    q: 'How do I start?',
-    a: 'Join the Naka Telegram and send a /nom into chat. henk walks you through the rest.',
-  },
-  {
-    icon: Gauge,
-    q: 'How do I increase my 💧x multiplier?',
-    a: "There are many ways to interact with henk. Varying your actions, showing up together in bursts, and sticking around all boost your 💧x. Henk's recipe is always changing, but real presence beats everything. Grinding gets you nothing.",
-  },
-  {
-    icon: Moon,
-    q: 'What if I need a day off?',
-    a: 'Rest is productive. A quiet day here and there pays out your daily average. You deserve it, hooman.',
-  },
-  {
-    icon: Coins,
-    q: 'How much is rain worth?',
-    a: 'One rain = one Naka.',
-  },
-  {
-    icon: Heart,
-    q: "What's the catch?",
-    a: 'No catch. Connection and creation are valuable, we reward them.',
-  },
+  { n: '3', title: 'Henk shows you the way', text: "That's it. You're earning rain." },
 ];
 
 export default function RainPage() {
@@ -86,7 +45,7 @@ export default function RainPage() {
         </p>
 
         <p className="mx-auto mt-8 max-w-lg text-base leading-relaxed text-white/55">
-          henk is paying hoomans to show up. Every day you play in the cult you earn{' '}
+          Henk is paying hoomans to show up. Every day you play in the cult you earn{' '}
           <span className="font-bold text-[#FF4D00]">💧rain</span>. In mid July a pool of{' '}
           <span className="font-bold text-white/85">10,000,000 Naka</span> opens to redeem rain for
           real Naka tokens.
@@ -139,28 +98,7 @@ export default function RainPage() {
         >
           <span className="text-gradient-fire">FAQ</span>
         </h2>
-        <ul className="flex flex-col gap-3">
-          {FAQ.map((item) => (
-            <li
-              key={item.q}
-              className="rounded-3xl p-5 sm:p-6"
-              style={{ background: 'rgba(17,17,17,0.55)', border: '1px solid rgba(255,77,0,0.16)' }}
-            >
-              <div className="flex items-start gap-3">
-                <span
-                  className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
-                  style={{ background: '#FF4D0014', border: '1px solid #FF4D0033' }}
-                >
-                  <item.icon className="h-4 w-4 text-[#FF4D00]" />
-                </span>
-                <div>
-                  <p className="text-sm font-bold text-white/85">{item.q}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-white/50">{item.a}</p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <RainFaq />
       </section>
 
       {/* Closing CTA */}
@@ -175,9 +113,12 @@ export default function RainPage() {
           href={TELEGRAM}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-3 inline-block text-sm font-bold text-[#FF4D00] underline-offset-4 hover:underline"
+          title="Telegram"
+          aria-label="Join the Naka Telegram"
+          className="mt-4 inline-flex h-11 w-11 items-center justify-center rounded-full text-[#FF4D00] transition-colors hover:bg-[#0088cc]/20 hover:text-[#0088cc]"
+          style={{ background: 'rgba(255,255,255,0.05)' }}
         >
-          t.me/NakaGoInu
+          <TelegramIcon className="h-5 w-5" />
         </a>
       </div>
     </main>
