@@ -1,16 +1,64 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Gem } from 'lucide-react';
+import { Gem, Check } from 'lucide-react';
 import ClaimConsole from '@/components/claim/ClaimConsole';
 import MintProgress from '@/components/claim/MintProgress';
 import { FOUNDER_PASS, NIPPO, type DropConfig } from '@/lib/thirdweb/drops';
 import { useDropStats } from '@/lib/thirdweb/useDropStats';
 
-const DROPS: Array<{ drop: DropConfig; maxPerTx: number; badge: string; cardImage: string }> = [
-  { drop: NIPPO, maxPerTx: 4, badge: 'Drop 01', cardImage: '/nfts/nippo-dossier.png' },
-  { drop: FOUNDER_PASS, maxPerTx: 4, badge: 'Drop 02', cardImage: '/nfts/naka-labs-logo.jpg' },
+interface DropEntry {
+  drop: DropConfig;
+  maxPerTx: number;
+  badge: string;
+  cardImage: string;
+  perks: ReactNode[];
+}
+
+const DROPS: DropEntry[] = [
+  {
+    drop: NIPPO,
+    maxPerTx: 4,
+    badge: 'Drop 01',
+    cardImage: '/nfts/nippo-dossier.png',
+    perks: [
+      <>
+        Increases your{' '}
+        <Link href="/rain" className="font-semibold text-white underline-offset-2 hover:underline">
+          💧 rain
+        </Link>{' '}
+        multiplier
+      </>,
+      "Token credits toward henk's art generators",
+      'Lifetime access to Cult features across the swarm',
+      '10 Rare Boi pedigrees in the drop',
+    ],
+  },
+  {
+    drop: FOUNDER_PASS,
+    maxPerTx: 4,
+    badge: 'Drop 02',
+    cardImage: '/nfts/naka-labs-logo.jpg',
+    perks: [
+      'Founder perks for life — subscription baked in',
+      'Priority access to every Naka Labs bootstrap',
+      '60 Rare Boi tiers with elevated standing',
+      'Direct line into the Labs build pipeline',
+    ],
+  },
+];
+
+const [NIPPO_ENTRY, FOUNDER_ENTRY] = DROPS;
+
+// Diagonal stagger: NIPPO claim (TL) · NIPPO perks (TR) · Founder perks (BL) · Founder claim (BR)
+const CELLS: Array<{ kind: 'claim' | 'perks'; entry: DropEntry }> = [
+  { kind: 'claim', entry: NIPPO_ENTRY },
+  { kind: 'perks', entry: NIPPO_ENTRY },
+  { kind: 'perks', entry: FOUNDER_ENTRY },
+  { kind: 'claim', entry: FOUNDER_ENTRY },
 ];
 
 export default function ClaimPage() {
@@ -45,16 +93,21 @@ export default function ClaimPage() {
         </p>
       </div>
 
-      {/* Drop cards */}
-      <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {DROPS.map(({ drop, maxPerTx, badge, cardImage }, i) => (
+      {/* Drop cards — staggered: claim boxes on the diagonal, perks on the off-diagonal */}
+      <section className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2">
+        {CELLS.map((cell, i) => (
           <motion.div
-            key={drop.slug}
+            key={`${cell.entry.drop.slug}-${cell.kind}`}
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="h-full"
           >
-            <MintDrop drop={drop} maxPerTx={maxPerTx} badge={badge} cardImage={cardImage} />
+            {cell.kind === 'claim' ? (
+              <ClaimBox entry={cell.entry} />
+            ) : (
+              <PerksPanel entry={cell.entry} />
+            )}
           </motion.div>
         ))}
       </section>
@@ -74,12 +127,14 @@ export default function ClaimPage() {
   );
 }
 
-function MintDrop({ drop, maxPerTx, badge, cardImage }: { drop: DropConfig; maxPerTx: number; badge: string; cardImage: string }) {
+/** The actionable tile: card image, live progress, and the claim console. */
+function ClaimBox({ entry }: { entry: DropEntry }) {
+  const { drop, maxPerTx, badge, cardImage } = entry;
   const stats = useDropStats(drop);
 
   return (
     <article
-      className="glass-card flex flex-col overflow-hidden"
+      className="glass-card flex h-full flex-col overflow-hidden"
       style={{ borderColor: `${drop.accent[0]}30` }}
     >
       {/* Card image */}
@@ -105,19 +160,8 @@ function MintDrop({ drop, maxPerTx, badge, cardImage }: { drop: DropConfig; maxP
         </div>
       </div>
 
-      {/* Drop header */}
-      <div className="p-6 pb-4">
-        <h2
-          className="text-3xl font-black leading-tight text-white"
-          style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
-        >
-          {drop.title}
-        </h2>
-        <p className="mt-1 text-sm text-white/45">{drop.tagline}</p>
-      </div>
-
       {/* Progress */}
-      <div className="mx-6 mb-4 rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+      <div className="mx-6 mb-4 mt-6 rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
         <MintProgress
           claimed={stats.claimed}
           total={stats.total}
@@ -131,6 +175,47 @@ function MintDrop({ drop, maxPerTx, badge, cardImage }: { drop: DropConfig; maxP
       <div className="mt-auto p-6 pt-0">
         <ClaimConsole drop={drop} maxPerTx={maxPerTx} />
       </div>
+    </article>
+  );
+}
+
+/** The descriptive tile: drop title, tagline, and the perks checklist. */
+function PerksPanel({ entry }: { entry: DropEntry }) {
+  const { drop, badge, perks } = entry;
+
+  return (
+    <article
+      className="glass-card flex h-full flex-col p-6 sm:p-8"
+      style={{ borderColor: `${drop.accent[0]}30` }}
+    >
+      <span
+        className="mb-4 inline-flex w-fit rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest"
+        style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40`, color: drop.accent[0], fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif' }}
+      >
+        {badge}
+      </span>
+
+      <h2
+        className="text-3xl font-black leading-tight text-white"
+        style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
+      >
+        {drop.title}
+      </h2>
+      <p className="mt-1 text-sm text-white/45">{drop.tagline}</p>
+
+      <ul className="mt-6 flex flex-col gap-3">
+        {perks.map((perk, i) => (
+          <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/70">
+            <span
+              className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+              style={{ background: `${drop.accent[0]}1a`, border: `1px solid ${drop.accent[0]}40` }}
+            >
+              <Check className="h-3 w-3" style={{ color: drop.accent[0] }} />
+            </span>
+            {perk}
+          </li>
+        ))}
+      </ul>
     </article>
   );
 }

@@ -1,38 +1,185 @@
 import type { Metadata } from 'next';
-import { CloudRain } from 'lucide-react';
+import { CloudRain, Droplets, Send, Sparkles, Gauge, Moon, Coins, Heart } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Make It Rain | NAKA GO 中号',
-  description: 'Pool opens soon.',
+  description: 'henk is paying hoomans to show up. Vibe, earn rain, redeem for real naka.',
 };
+
+const TELEGRAM = 'https://t.me/NakaGoInu';
+
+const STEPS = [
+  { n: '1', title: 'Join the Telegram', text: 'Tap in to the cult chat.' },
+  { n: '2', title: 'Send /nom', text: 'Drop it straight into the chat.' },
+  { n: '3', title: 'henk shows you the way', text: "That's it. You're earning rain." },
+];
+
+const FAQ = [
+  {
+    icon: Droplets,
+    q: 'What is Naka Rain?',
+    a: 'Points you earn just by connecting with the cult, playing with henk, and making art. Rain accrues daily and redeems for real Naka tokens.',
+  },
+  {
+    icon: Sparkles,
+    q: 'Can I earn right now?',
+    a: 'Yes, rain is live today. Up to thousands per day as your 💧x multiplier climbs. Every /nom you roll earns one rain, other factors push the rest.',
+  },
+  {
+    icon: Coins,
+    q: 'When do I get it?',
+    a: 'Rain vests for two weeks. In mid July the 10,000,000 Naka pool opens to redeem.',
+  },
+  {
+    icon: Send,
+    q: 'How do I start?',
+    a: 'Join the Naka Telegram and send a /nom into chat. henk walks you through the rest.',
+  },
+  {
+    icon: Gauge,
+    q: 'How do I increase my 💧x multiplier?',
+    a: "There are many ways to interact with henk. Varying your actions, showing up together in bursts, and sticking around all boost your 💧x. Henk's recipe is always changing, but real presence beats everything. Grinding gets you nothing.",
+  },
+  {
+    icon: Moon,
+    q: 'What if I need a day off?',
+    a: 'Rest is productive. A quiet day here and there pays out your daily average. You deserve it, hooman.',
+  },
+  {
+    icon: Coins,
+    q: 'How much is rain worth?',
+    a: 'One rain = one Naka.',
+  },
+  {
+    icon: Heart,
+    q: "What's the catch?",
+    a: 'No catch. Connection and creation are valuable, we reward them.',
+  },
+];
 
 export default function RainPage() {
   return (
-    <main className="mx-auto flex min-h-[70vh] max-w-3xl flex-col items-center justify-center px-4 py-24 text-center sm:px-6">
-      {/* Floating tile — matches the header tiles on /view and /mosaic. CSS-animated
-          (not framer-motion) so this stays a server component that can export metadata. */}
-      <div
-        className="animate-float mb-6 flex h-16 w-16 items-center justify-center rounded-2xl"
-        style={{ background: '#111', border: '1px solid rgba(255,77,0,0.3)', boxShadow: '0 0 30px rgba(255,77,0,0.2)' }}
-      >
-        <CloudRain className="h-8 w-8 text-[#FF4D00]" />
+    <main className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+      {/* Hero */}
+      <div className="flex flex-col items-center text-center">
+        {/* Floating tile — matches the header tiles on /view and /mosaic. CSS-animated
+            (not framer-motion) so this stays a server component that can export metadata. */}
+        <div
+          className="animate-float mb-6 flex h-16 w-16 items-center justify-center rounded-2xl"
+          style={{ background: '#111', border: '1px solid rgba(255,77,0,0.3)', boxShadow: '0 0 30px rgba(255,77,0,0.2)' }}
+        >
+          <CloudRain className="h-8 w-8 text-[#FF4D00]" />
+        </div>
+
+        <h1
+          className="text-5xl font-black leading-none text-white md:text-7xl"
+          style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
+        >
+          <span className="text-gradient-fire">Make It Rain</span>
+        </h1>
+
+        <p
+          className="mt-5 text-xl text-white/70 md:text-2xl"
+          style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.25em' }}
+        >
+          VIBE · EARN · REDEEM
+        </p>
+
+        <p className="mx-auto mt-8 max-w-lg text-base leading-relaxed text-white/55">
+          henk is paying hoomans to show up. Every day you play in the cult you earn{' '}
+          <span className="font-bold text-[#FF4D00]">💧rain</span>. In mid July a pool of{' '}
+          <span className="font-bold text-white/85">10,000,000 Naka</span> opens to redeem rain for
+          real Naka tokens.
+        </p>
       </div>
 
-      <h1
-        className="text-5xl font-black leading-none text-white md:text-7xl"
-        style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
-      >
-        <span className="text-gradient-fire">Make It Rain</span>
-      </h1>
+      {/* Start earning */}
+      <section className="mt-14">
+        <h2 className="mb-5 text-center text-sm font-black uppercase tracking-[0.25em] text-white/40">
+          ⚡ Start Earning Today
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {STEPS.map((step) => (
+            <div
+              key={step.n}
+              className="rounded-2xl p-5"
+              style={{ background: 'rgba(17,17,17,0.55)', border: '1px solid rgba(255,77,0,0.16)' }}
+            >
+              <span
+                className="flex h-9 w-9 items-center justify-center rounded-xl text-lg font-black text-[#FF4D00]"
+                style={{ background: '#FF4D0014', border: '1px solid #FF4D0033' }}
+              >
+                {step.n}
+              </span>
+              <p className="mt-3 text-sm font-bold text-white/85">{step.title}</p>
+              <p className="mt-1 text-xs leading-relaxed text-white/45">{step.text}</p>
+            </div>
+          ))}
+        </div>
 
-      <p
-        className="mt-5 text-xl text-white/70 md:text-2xl"
-        style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
-      >
-        Pool Opens Soon 🌧️💧
-      </p>
+        <div className="mt-6 flex justify-center">
+          <a
+            href={TELEGRAM}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-black uppercase tracking-[0.15em] text-black transition-transform hover:scale-105"
+            style={{ background: '#FF4D00', boxShadow: '0 0 30px rgba(255,77,0,0.35)' }}
+          >
+            <Send className="h-4 w-4" />
+            Join Telegram &amp; Send /nom
+          </a>
+        </div>
+      </section>
 
-      <p className="mt-12 text-base italic text-white/40">the clouds are gathering</p>
+      {/* FAQ */}
+      <section className="mt-16">
+        <h2
+          className="mb-6 text-center text-3xl font-black text-white md:text-4xl"
+          style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
+        >
+          <span className="text-gradient-fire">FAQ</span>
+        </h2>
+        <ul className="flex flex-col gap-3">
+          {FAQ.map((item) => (
+            <li
+              key={item.q}
+              className="rounded-3xl p-5 sm:p-6"
+              style={{ background: 'rgba(17,17,17,0.55)', border: '1px solid rgba(255,77,0,0.16)' }}
+            >
+              <div className="flex items-start gap-3">
+                <span
+                  className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
+                  style={{ background: '#FF4D0014', border: '1px solid #FF4D0033' }}
+                >
+                  <item.icon className="h-4 w-4 text-[#FF4D00]" />
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-white/85">{item.q}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-white/50">{item.a}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Closing CTA */}
+      <div className="mt-16 text-center">
+        <p
+          className="text-2xl font-black text-white md:text-3xl"
+          style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
+        >
+          The Rain Is Falling Now 🌧️
+        </p>
+        <a
+          href={TELEGRAM}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 inline-block text-sm font-bold text-[#FF4D00] underline-offset-4 hover:underline"
+        >
+          t.me/NakaGoInu
+        </a>
+      </div>
     </main>
   );
 }
