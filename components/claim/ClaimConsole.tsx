@@ -88,18 +88,15 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
       {status === 'success' && <SuccessBurst colors={drop.accent} />}
 
       {/* Price row */}
-      <div className="mb-5 flex items-end justify-between">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.2em] text-white/40">Price</p>
-          <p
-            className="text-3xl font-black leading-tight"
-            style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: '#fff' }}
-          >
-            {stats.priceLabel ?? '—'}
-            <span className="ml-1 text-sm font-bold text-white/35">/ each</span>
-          </p>
-        </div>
-        <p className="text-right text-[11px] text-white/35">≈ ${drop.referenceUsd} each<br />paid on-chain</p>
+      <div className="mb-5 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
+        <span className="text-[11px] uppercase tracking-[0.2em] text-white/40">Price</span>
+        <span
+          className="text-3xl font-black leading-tight"
+          style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: '#fff' }}
+        >
+          {stats.priceLabel ?? '—'}
+        </span>
+        <span className="text-sm font-bold text-white/35">/ each</span>
       </div>
 
       {/* Quantity */}

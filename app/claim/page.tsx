@@ -32,7 +32,7 @@ const DROPS: DropEntry[] = [
         </Link>{' '}
         multiplier
       </>,
-      "Token credits toward henk's art generators",
+      "Token credits toward Henk's art generators",
       'Lifetime access to Cult features across the swarm',
       'Tap in to the community',
       '10 Rare Boi pedigrees in the drop',
@@ -44,7 +44,7 @@ const DROPS: DropEntry[] = [
     badge: 'Drop 02',
     cardImage: '/nfts/naka-labs-logo.jpg',
     perks: [
-      'Founder perks for life — subscription baked in',
+      'Founder perks for life, subscription baked in',
       'Priority access to every Naka Labs bootstrap',
       '60 Rare Boi tiers with elevated standing',
       'Direct line into the Labs build pipeline',
@@ -153,7 +153,6 @@ function ClaimBox({ entry }: { entry: DropEntry }) {
       >
         {drop.title}
       </h2>
-      <p className="mt-1 text-sm text-white/45">{drop.tagline}</p>
 
       {/* Progress */}
       <div className="mt-5 rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>

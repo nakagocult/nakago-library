@@ -12,8 +12,6 @@ export interface DropConfig {
   title: string;
   /** One-line tagline for the hub card. */
   tagline: string;
-  /** Reference USD price — copy only. The live on-chain price is always rendered. */
-  referenceUsd: number;
   /** Known drop size. Used as the progress denominator until the live claim condition loads. */
   totalSupply: number;
   /** Count of the scarce "Rare Boi" tier within the drop. */
@@ -30,7 +28,6 @@ export const NIPPO: DropConfig = {
   name: 'NIPPO',
   title: 'The NIPPO Pedigree Archives',
   tagline: 'Lifetime access to Cult features across the swarm.',
-  referenceUsd: 27,
   totalSupply: 270,
   rareBois: 10,
   concealed: true,
@@ -43,7 +40,6 @@ export const FOUNDER_PASS: DropConfig = {
   name: 'Founder Pass',
   title: 'Naka Labs Founder Pass',
   tagline: 'Founder perks for life. Subscription baked in.',
-  referenceUsd: 48,
   totalSupply: 480,
   rareBois: 60,
   concealed: false,

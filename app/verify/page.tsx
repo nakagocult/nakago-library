@@ -12,7 +12,7 @@ const PERKS = [
   {
     icon: CloudRain,
     title: 'Redeem Naka through Make It Rain',
-    text: 'Make It Rain is the faucet that pays you to vibe with the cult.',
+    text: 'Make It Rain is the faucet that pays you to vibe with the Cult.',
   },
   {
     icon: TrendingUp,

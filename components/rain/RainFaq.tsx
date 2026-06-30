@@ -18,7 +18,7 @@ const FAQ: Array<{ icon: LucideIcon; q: string; a: string }> = [
   {
     icon: Droplets,
     q: 'What is Naka Rain?',
-    a: 'Points you earn just by connecting with the cult, playing with Henk, and making art. Rain accrues daily and redeems for real Naka tokens.',
+    a: 'Points you earn just by connecting with the Cult, playing with Henk, and making art. Rain accrues daily and redeems for real Naka tokens.',
   },
   {
     icon: Sparkles,
