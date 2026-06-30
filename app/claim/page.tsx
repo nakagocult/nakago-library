@@ -28,7 +28,7 @@ const DROPS: DropEntry[] = [
       <>
         Increases your{' '}
         <Link href="/rain" className="font-semibold text-white underline-offset-2 hover:underline">
-          💧 rain
+          💧 Rain
         </Link>{' '}
         multiplier
       </>,

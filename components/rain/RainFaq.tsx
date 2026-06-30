@@ -23,7 +23,7 @@ const FAQ: Array<{ icon: LucideIcon; q: string; a: string }> = [
   {
     icon: Sparkles,
     q: 'Can I earn right now?',
-    a: 'Yes, rain is live today. Up to thousands per day as your 💧x multiplier climbs. Every /nom you roll earns one rain, other factors push the rest.',
+    a: 'Yes, Rain is live today. Up to thousands per day as your 💧x multiplier climbs. Every /nom you roll earns one Rain, other factors push the rest.',
   },
   {
     icon: Coins,
@@ -47,8 +47,8 @@ const FAQ: Array<{ icon: LucideIcon; q: string; a: string }> = [
   },
   {
     icon: Coins,
-    q: 'How much is rain worth?',
-    a: 'One rain = one Naka.',
+    q: 'How much is Rain worth?',
+    a: 'One Rain = One Naka.',
   },
   {
     icon: Heart,

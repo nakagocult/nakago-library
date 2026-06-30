@@ -34,7 +34,7 @@ const EXPLORE = [
   { href: '/view', icon: Images, title: 'View', text: 'Browse your Naka relics and holdings.' },
   { href: '/mosaic', icon: Grid2x2, title: 'Mosaic', text: "Each cycle, every hooman's fragment becomes its own universe." },
   { href: '/cawf', icon: Leaf, title: 'CAWF', text: 'Clean air, water, and food. The Cult mission.' },
-  { href: '/rain', icon: CloudRain, title: 'Make It Rain', text: 'Earn 💧rain by vibing, redeem for real Naka.' },
+  { href: '/rain', icon: CloudRain, title: 'Make It Rain', text: 'Earn 💧Rain by vibing, redeem for real Naka.' },
 ];
 
 export default function HomePage() {

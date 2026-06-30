@@ -5,7 +5,7 @@ import TelegramIcon from '@/components/shared/TelegramIcon';
 
 export const metadata: Metadata = {
   title: 'Make It Rain | NAKA GO 中号',
-  description: 'Henk is paying hoomans to show up. Vibe, earn rain, redeem for real Naka.',
+  description: 'Henk is paying hoomans to show up. Vibe, earn Rain, redeem for real Naka.',
 };
 
 const TELEGRAM = 'https://t.me/NakaGoInu';
@@ -13,7 +13,7 @@ const TELEGRAM = 'https://t.me/NakaGoInu';
 const STEPS = [
   { n: '1', title: 'Join the Telegram', text: 'Tap in to the Cult chat.' },
   { n: '2', title: 'Send /nom', text: 'Drop it straight into the chat.' },
-  { n: '3', title: 'Henk shows you the way', text: "That's it. You're earning rain." },
+  { n: '3', title: 'Henk shows you the way', text: "That's it. You're earning Rain." },
 ];
 
 export default function RainPage() {
@@ -46,8 +46,8 @@ export default function RainPage() {
 
         <p className="mx-auto mt-8 max-w-lg text-base leading-relaxed text-white/55">
           Henk is paying hoomans to show up. Every day you play in the Cult you earn{' '}
-          <span className="whitespace-nowrap font-bold text-[#FF4D00]">💧rain</span>. In mid July a pool of{' '}
-          <span className="whitespace-nowrap font-bold text-white/85">10,000,000 Naka</span> opens to redeem rain for
+          <span className="whitespace-nowrap font-bold text-[#FF4D00]">💧Rain</span>. In mid July a pool of{' '}
+          <span className="whitespace-nowrap font-bold text-white/85">10,000,000 Naka</span> opens to redeem Rain for
           real Naka tokens.
         </p>
       </div>
