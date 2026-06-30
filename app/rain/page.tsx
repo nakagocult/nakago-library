@@ -46,8 +46,8 @@ export default function RainPage() {
 
         <p className="mx-auto mt-8 max-w-lg text-base leading-relaxed text-white/55">
           Henk is paying hoomans to show up. Every day you play in the Cult you earn{' '}
-          <span className="font-bold text-[#FF4D00]">💧rain</span>. In mid July a pool of{' '}
-          <span className="font-bold text-white/85">10,000,000 Naka</span> opens to redeem rain for
+          <span className="whitespace-nowrap font-bold text-[#FF4D00]">💧rain</span>. In mid July a pool of{' '}
+          <span className="whitespace-nowrap font-bold text-white/85">10,000,000 Naka</span> opens to redeem rain for
           real Naka tokens.
         </p>
       </div>
@@ -81,11 +81,13 @@ export default function RainPage() {
             href={TELEGRAM}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-black uppercase tracking-[0.15em] text-black transition-transform hover:scale-105"
+            className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-center text-sm font-black uppercase tracking-[0.15em] text-black transition-transform hover:scale-105"
             style={{ background: '#FF4D00', boxShadow: '0 0 30px rgba(255,77,0,0.35)' }}
           >
-            <Send className="h-4 w-4" />
-            Join Telegram &amp; Send /nom
+            <Send className="h-4 w-4 shrink-0" />
+            <span>
+              Join Telegram &amp; <span className="whitespace-nowrap">Send /nom</span>
+            </span>
           </a>
         </div>
       </section>
@@ -113,12 +115,11 @@ export default function RainPage() {
           href={TELEGRAM}
           target="_blank"
           rel="noopener noreferrer"
-          title="Telegram"
           aria-label="Join the Naka Telegram"
-          className="mt-4 inline-flex h-11 w-11 items-center justify-center rounded-full text-[#FF4D00] transition-colors hover:bg-[#0088cc]/20 hover:text-[#0088cc]"
-          style={{ background: 'rgba(255,255,255,0.05)' }}
+          className="mt-4 inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-black uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#0088cc]/20 hover:text-[#0088cc]"
+          style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,77,0,0.25)' }}
         >
-          <TelegramIcon className="h-5 w-5" />
+          <TelegramIcon className="h-4 w-4" /> Join
         </a>
       </div>
     </main>

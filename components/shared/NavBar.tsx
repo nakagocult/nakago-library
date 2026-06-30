@@ -25,8 +25,9 @@ const XIcon = () => (
   </svg>
 );
 
-/** Contract + Buy $NAKA + socials — the promoted primary actions. */
-function PrimaryFeatures() {
+/** Contract + Buy $NAKA + socials — the promoted primary actions. On the cramped
+    mobile bar the socials are dropped (they live in the menu instead via `socials={false}`). */
+function PrimaryFeatures({ socials = true }: { socials?: boolean }) {
   return (
     <div
       className="flex items-center gap-2 rounded-full p-1"
@@ -47,26 +48,30 @@ function PrimaryFeatures() {
       >
         Buy $NAKA
       </a>
-      <a
-        href={SOCIAL_LINKS.telegram}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Telegram"
-        className="rounded-full p-2 text-white/60 transition-colors hover:bg-[#0088cc]/20 hover:text-[#0088cc]"
-        style={{ background: 'rgba(255,255,255,0.05)' }}
-      >
-        <TelegramIcon />
-      </a>
-      <a
-        href={SOCIAL_LINKS.twitter}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="X / Twitter"
-        className="rounded-full p-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-        style={{ background: 'rgba(255,255,255,0.05)' }}
-      >
-        <XIcon />
-      </a>
+      {socials && (
+        <>
+          <a
+            href={SOCIAL_LINKS.telegram}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Telegram"
+            className="rounded-full p-2 text-white/60 transition-colors hover:bg-[#0088cc]/20 hover:text-[#0088cc]"
+            style={{ background: 'rgba(255,255,255,0.05)' }}
+          >
+            <TelegramIcon />
+          </a>
+          <a
+            href={SOCIAL_LINKS.twitter}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="X / Twitter"
+            className="rounded-full p-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+            style={{ background: 'rgba(255,255,255,0.05)' }}
+          >
+            <XIcon />
+          </a>
+        </>
+      )}
     </div>
   );
 }
@@ -188,6 +193,33 @@ export default function NavBar() {
                       </Link>
                     );
                   })}
+
+                  {/* Socials — mobile only; desktop shows them in the centered bar */}
+                  <div
+                    className="mt-1.5 flex items-center gap-1.5 border-t px-1 pt-2 md:hidden"
+                    style={{ borderColor: 'rgba(255,255,255,0.1)' }}
+                  >
+                    <a
+                      href={SOCIAL_LINKS.telegram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Telegram"
+                      className="flex flex-1 items-center justify-center rounded-lg py-2 text-white/60 transition-colors hover:bg-[#0088cc]/20 hover:text-[#0088cc]"
+                      style={{ background: 'rgba(255,255,255,0.05)' }}
+                    >
+                      <TelegramIcon />
+                    </a>
+                    <a
+                      href={SOCIAL_LINKS.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="X / Twitter"
+                      className="flex flex-1 items-center justify-center rounded-lg py-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                      style={{ background: 'rgba(255,255,255,0.05)' }}
+                    >
+                      <XIcon />
+                    </a>
+                  </div>
                 </motion.div>
               </>
             )}
@@ -201,7 +233,7 @@ export default function NavBar() {
         className="flex items-center justify-center border-t px-4 py-2 md:hidden"
         style={{ borderColor: 'rgba(255,77,0,0.1)' }}
       >
-        <PrimaryFeatures />
+        <PrimaryFeatures socials={false} />
       </div>
     </nav>
   );

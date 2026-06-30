@@ -30,7 +30,7 @@ export default function WordLineageFooter() {
         {/* Colere, Cultivate, Culture */}
         <div className="mt-8 flex flex-col items-center gap-5 sm:flex-row sm:items-stretch sm:justify-between sm:gap-3">
           {LINEAGE.slice(0, 3).map((entry) => (
-            <div key={entry.word} className="flex flex-1 items-start gap-3 sm:flex-col sm:items-center sm:text-center">
+            <div key={entry.word} className="flex flex-1 flex-col items-center text-center">
               <span
                 className="text-xl font-black leading-none sm:text-2xl"
                 style={{
@@ -41,7 +41,7 @@ export default function WordLineageFooter() {
               >
                 {entry.word}
               </span>
-              <p className="max-w-[14rem] text-[11px] leading-relaxed text-white/30 sm:mt-1">
+              <p className="mt-1 max-w-[14rem] text-[11px] leading-relaxed text-white/30">
                 {entry.def}
               </p>
             </div>

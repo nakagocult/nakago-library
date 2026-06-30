@@ -193,7 +193,8 @@ export default function HomePage() {
                 className="text-gradient-fire text-3xl font-black md:text-4xl"
                 style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
               >
-                {beat.year}
+                {beat.year.match(/^\d+/)?.[0]}
+                <span className="text-[0.55em]">{beat.year.replace(/^\d+/, '')}</span>
               </div>
               <div
                 className="mt-1 text-sm font-black uppercase tracking-[0.12em] text-white"
