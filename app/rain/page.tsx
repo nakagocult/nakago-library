@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const TELEGRAM = 'https://t.me/NakaGoInu';
 
 const STEPS = [
-  { n: '1', title: 'Join the Telegram', text: 'Tap in to the Cult chat.' },
+  { n: '1', title: 'Join the Telegram', text: 'Tap into the community chat.' },
   { n: '2', title: 'Send /nom', text: 'Drop it straight into the chat.' },
   { n: '3', title: 'Henk shows you the way', text: "That's it. You're earning Rain." },
 ];
