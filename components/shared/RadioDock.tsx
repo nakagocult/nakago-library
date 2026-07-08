@@ -33,6 +33,20 @@ export default function RadioDock({ tracks }: { tracks: RadioTrack[] }) {
 
   const hasTracks = tracks.length > 0;
 
+  // Shuffle ONCE on first render into a stable play order, so skipping walks a
+  // fixed "static playlist" instead of re-rolling a fresh random pick each time
+  // (which, over a short library, keeps replaying the same few tracks). Built
+  // in a lazy ref so it happens exactly once per mount.
+  const shuffledRef = useRef<number[] | null>(null);
+  if (shuffledRef.current === null) {
+    const arr = tracks.map((_, i) => i);
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    shuffledRef.current = arr;
+  }
+
   const play = useCallback(
     (i: number) => {
       const audio = audioRef.current;
@@ -47,34 +61,47 @@ export default function RadioDock({ tracks }: { tracks: RadioTrack[] }) {
     [tracks, index],
   );
 
-  const pickRandom = useCallback(() => {
-    if (tracks.length <= 1) return 0;
-    let n = index ?? 0;
-    while (n === index) n = Math.floor(Math.random() * tracks.length);
-    return n;
-  }, [tracks.length, index]);
+  // The active queue of track indices: the fixed shuffled order when shuffle is
+  // on, else natural file order. Either way it's a stable list we walk in
+  // sequence — no more re-rolling a fresh random pick on every skip.
+  const queue = useCallback(
+    () => (shuffle ? shuffledRef.current! : tracks.map((_, i) => i)),
+    [shuffle, tracks.length],
+  );
+
+  // The track `dir` steps away in the queue (wrapping), from the current one.
+  const step = useCallback(
+    (dir: 1 | -1) => {
+      const q = queue();
+      if (q.length === 0) return 0;
+      if (index === null) return q[0];
+      const pos = q.indexOf(index);
+      return q[(pos + dir + q.length) % q.length];
+    },
+    [queue, index],
+  );
 
   const playNext = useCallback(() => {
     if (!hasTracks) return;
-    play(shuffle ? pickRandom() : index === null ? 0 : (index + 1) % tracks.length);
-  }, [hasTracks, shuffle, pickRandom, index, tracks.length, play]);
+    play(step(1));
+  }, [hasTracks, step, play]);
 
   const playPrev = useCallback(() => {
     if (!hasTracks) return;
-    play(shuffle ? pickRandom() : index === null ? 0 : (index - 1 + tracks.length) % tracks.length);
-  }, [hasTracks, shuffle, pickRandom, index, tracks.length, play]);
+    play(step(-1));
+  }, [hasTracks, step, play]);
 
   const togglePlay = useCallback(() => {
     const audio = audioRef.current;
     if (!audio || !hasTracks) return;
     if (index === null) {
-      play(shuffle ? pickRandom() : 0);
+      play(step(1));
     } else if (isPlaying) {
       audio.pause();
     } else {
       audio.play().catch(() => {});
     }
-  }, [hasTracks, index, isPlaying, play, shuffle, pickRandom]);
+  }, [hasTracks, index, isPlaying, play, step]);
 
   // Reveal on mount (the intro screen that used to gate this was removed); also
   // let anything dispatch naka:play-random (nav "Radio" item, etc.) to wake +
@@ -84,13 +111,14 @@ export default function RadioDock({ tracks }: { tracks: RadioTrack[] }) {
     const onPlayRandom = () => {
       setReady(true);
       setShuffle(true);
-      play(pickRandom());
+      // Start at the top of the pre-shuffled static playlist.
+      play(shuffledRef.current![0] ?? 0);
     };
     window.addEventListener('naka:play-random', onPlayRandom);
     return () => {
       window.removeEventListener('naka:play-random', onPlayRandom);
     };
-  }, [play, pickRandom]);
+  }, [play]);
 
   if (!ready || !hasTracks) return null;
 

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Gem, Images, ArrowRight, ArrowUpRight, Coins, Percent, Flame, ShieldCheck, CloudRain, Grid2x2, Leaf, Bot } from 'lucide-react';
+import { Gem, Images, ArrowRight, ArrowUpRight, Coins, Percent, Flame, ShieldCheck, CloudRain, Grid2x2, Leaf, Bot, ScrollText } from 'lucide-react';
 import { MASCOT_URL, SOCIAL_LINKS } from '@/lib/site';
 
 // Hero stats are lore-only — token facts live in the NAKAnomics band below.
@@ -14,11 +14,36 @@ const STATS = [
   { value: '3', label: 'Bloodlines Merged' },
 ];
 
+// The real records the story is built on — the preservation society that saved
+// the breed, and Naka Go's own entry in its pedigree registry.
+const NIPPO_HISTORY = 'https://www.nihonken-hozonkai.or.jp/en/history/';
+const NIPPO_PEDIGREE = 'https://www.shibapedigree.com/details.php?id=63626';
+
 const TIMELINE = [
-  { year: '1945', title: 'On the Brink', text: 'Post-war Japan — the Shiba Inu is all but extinct, only a handful left.' },
-  { year: '1948', title: 'A Legend Is Born', text: 'Naka Go is born April 16 in the Akaishi-so kennel.' },
-  { year: '1950s', title: 'The Akaishi Line', text: 'The foundation stud — the Shinshu, Mino & San’in lines merge through him.' },
-  { year: '1963', title: 'Legacy Secured', text: 'He passes Dec 23, leaving his blood in 80% of every Shiba alive today.' },
+  {
+    year: '1945',
+    title: 'On the Brink',
+    text: 'Post-war Japan leaves the Shiba all but extinct. NIPPO — the Nihon Ken Hozonkai, founded 1928 to preserve the native breeds, keeping detailed pedigrees since 1932 — has almost nothing left to save.',
+    source: { href: NIPPO_HISTORY, label: 'Nihon Ken Hozonkai archives' },
+  },
+  {
+    year: '1948',
+    title: 'A Legend Is Born',
+    text: 'Naka Go is born April 16 in the Akaishi-so kennel — sire Akani Go, dam Beniko Go, both tracing to Aka Go Fugaku, the Father of the Shiba. Logged with NIPPO as registration #1216.',
+    source: { href: NIPPO_PEDIGREE, label: 'NIPPO pedigree #1216' },
+  },
+  {
+    year: '1950s',
+    title: 'The Founding Dog',
+    text: "NIPPO's own history names him the founding dog of the postwar Shiba restoration — the Akaishi line, merging the Shinshu, Mino & San'in bloodlines through him.",
+    source: { href: NIPPO_HISTORY, label: 'Preservation society records' },
+  },
+  {
+    year: '1963',
+    title: 'Legacy Secured',
+    text: 'He passes Dec 23, his blood carried on through 14 documented offspring — and today runs in 80% of every Shiba alive.',
+    source: { href: NIPPO_PEDIGREE, label: 'Modern lineage analysis' },
+  },
 ];
 
 const TOKENOMICS = [
@@ -254,9 +279,68 @@ export default function HomePage() {
                 {beat.title}
               </div>
               <p className="mt-2 text-sm leading-relaxed text-white/55">{beat.text}</p>
+              {beat.source && (
+                <a
+                  href={beat.source.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.08em] text-[#FF4D00]/75 transition-colors hover:text-[#FF4D00]"
+                >
+                  {beat.source.label} <ArrowUpRight className="h-3 w-3" />
+                </a>
+              )}
             </motion.div>
           ))}
         </div>
+
+        {/* Provenance — the real registry entry behind the lore */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5 }}
+          className="mt-6 rounded-3xl p-6 sm:p-8"
+          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,77,0,0.15)' }}
+        >
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-2xl">
+              <div
+                className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.3em] text-[#FF4D00]"
+                style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
+              >
+                <ScrollText className="h-4 w-4" /> Real Provenance
+              </div>
+              <p className="mt-3 text-sm leading-relaxed text-white/70 md:text-base">
+                Not lore we made up. <span className="font-bold text-white">Naka Go Akaishi-so</span>,
+                NIPPO registration <span className="font-bold text-white">#1216</span> — sire Akani Go,
+                dam Beniko Go, both descending from{' '}
+                <span className="font-bold text-white">Aka Go Fugaku, the Father of the Shiba</span>.
+                Shown at the 12th NIPPO Grand National, 1949. Every fact is on file with the society
+                that saved the breed.
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-col gap-3 sm:flex-row lg:flex-col">
+              <a
+                href={NIPPO_PEDIGREE}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
+                style={{ background: 'linear-gradient(135deg, #FF4D00, #FF0000)', boxShadow: '0 0 24px rgba(255,77,0,0.5)', fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.08em' }}
+              >
+                View His NIPPO Pedigree <ArrowUpRight className="h-4 w-4" />
+              </a>
+              <a
+                href={NIPPO_HISTORY}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-bold text-white/80 transition-colors hover:text-white"
+                style={{ border: '1px solid rgba(255,77,0,0.4)', fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.08em' }}
+              >
+                Read NIPPO&apos;s History <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* NAKAnomics — trust badges */}
