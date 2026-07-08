@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Gem, Images, ArrowRight, ArrowUpRight, Coins, Percent, Flame, ShieldCheck, CloudRain, Grid2x2, Leaf } from 'lucide-react';
+import { Gem, Images, ArrowRight, ArrowUpRight, Coins, Percent, Flame, ShieldCheck, CloudRain, Grid2x2, Leaf, Bot } from 'lucide-react';
 import { MASCOT_URL, SOCIAL_LINKS } from '@/lib/site';
 
 // Hero stats are lore-only — token facts live in the NAKAnomics band below.
@@ -30,11 +30,12 @@ const TOKENOMICS = [
 
 // The site map — every destination beyond the hub, one card each.
 const EXPLORE = [
+  { href: '/henk', icon: Bot, title: 'Henk', text: "Meet the Cult's AI. He runs the Rain and pays hoomans to show up." },
+  { href: '/rain', icon: CloudRain, title: 'Make It Rain', text: 'Earn 💧Rain by vibing, redeem for real Naka.' },
   { href: '/claim', icon: Gem, title: 'Claim', text: 'Mint the NIPPO and Founder Pass drops, live on-chain.' },
   { href: '/view', icon: Images, title: 'View', text: 'Browse your Naka relics and holdings.' },
   { href: '/mosaic', icon: Grid2x2, title: 'Mosaic', text: "Each cycle, every hooman's fragment becomes its own universe." },
   { href: '/cawf', icon: Leaf, title: 'CAWF', text: 'Clean air, water, and food. The Cult mission.' },
-  { href: '/rain', icon: CloudRain, title: 'Make It Rain', text: 'Earn 💧Rain by vibing, redeem for real Naka.' },
 ];
 
 export default function HomePage() {

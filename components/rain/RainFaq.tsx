@@ -18,7 +18,7 @@ const FAQ: Array<{ icon: LucideIcon; q: string; a: string }> = [
   {
     icon: Droplets,
     q: 'What is Naka Rain?',
-    a: 'Points you earn just by connecting with the Cult, playing with Henk, and making art. Rain accrues daily and redeems for real Naka tokens.',
+    a: 'Points you earn just by connecting with the Cult, playing with our AI bot Henk, and making art. Rain accrues daily and redeems for real Naka tokens.',
   },
   {
     icon: Sparkles,
@@ -28,12 +28,12 @@ const FAQ: Array<{ icon: LucideIcon; q: string; a: string }> = [
   {
     icon: Coins,
     q: 'When do I get it?',
-    a: 'Rain vests for two weeks. In mid July the 10,000,000 Naka pool opens to redeem.',
+    a: 'Rain vests for two weeks. We snapshot balances on the 13th and 27th of each month, and each snapshot airdrops on the next one. First snapshot: July 13. First airdrop: July 27.',
   },
   {
     icon: Send,
     q: 'How do I start?',
-    a: 'Join the Naka Telegram and send a /nom into chat. Henk walks you through the rest.',
+    a: 'Join the Naka Go Telegram and send a /nom into chat. Henk walks you through the rest.',
   },
   {
     icon: Gauge,

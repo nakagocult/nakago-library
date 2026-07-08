@@ -12,11 +12,12 @@ import TelegramIcon from '@/components/shared/TelegramIcon';
 
 const LINKS = [
   { href: '/', label: 'Home' },
+  { href: '/henk', label: 'Henk' },
+  { href: '/rain', label: 'Rain' },
   { href: '/claim', label: 'Claim' },
   { href: '/view', label: 'View' },
   { href: '/mosaic', label: 'Mosaic' },
   { href: '/cawf', label: 'CAWF' },
-  { href: '/rain', label: 'Rain' },
 ];
 
 const XIcon = () => (

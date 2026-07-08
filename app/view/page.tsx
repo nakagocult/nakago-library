@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Images, Loader2, Wallet } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
@@ -35,8 +36,11 @@ export default function ViewPage() {
 <span className="text-gradient-fire">HOLDINGS</span>
         </h1>
         <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-white/45">
-          Everything the connected wallet holds across the Naka Go drops, read live from the
-          contracts.
+          Everything the connected wallet holds across the Naka Go{' '}
+          <Link href="/claim" className="font-semibold text-white/70 underline-offset-2 hover:underline">
+            drops
+          </Link>
+          , read live from the contracts.
         </p>
       </div>
 
