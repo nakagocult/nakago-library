@@ -49,10 +49,10 @@ export default function RainPage() {
           <Link href="/henk" className="font-bold text-[#FF4D00] underline-offset-2 hover:underline">
             Henk
           </Link>{' '}
-          is paying hoomans to show up. Every day you play in the Cult you earn{' '}
-          <span className="whitespace-nowrap font-bold text-[#FF4D00]">💧Rain</span>. In mid July a pool of{' '}
-          <span className="whitespace-nowrap font-bold text-white/85">10,000,000 Naka</span> opens to redeem Rain for
-          real Naka tokens.
+          is paying hoomans to show up. Every day you vibe in the Cult you earn{' '}
+          <span className="whitespace-nowrap font-bold text-[#FF4D00]">💧Rain</span>, with a pool of{' '}
+          <span className="whitespace-nowrap font-bold text-white/85">10,000,000 Naka</span> up for grabs — redeem your
+          Rain for real Naka tokens.
         </p>
       </div>
 
