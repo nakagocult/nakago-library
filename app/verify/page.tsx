@@ -1,27 +1,48 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import { Loader2, CloudRain, TrendingUp, Gem } from 'lucide-react';
 import VerifyConsole from '@/components/verify/VerifyConsole';
+import TelegramIcon from '@/components/shared/TelegramIcon';
+import { SOCIAL_LINKS } from '@/lib/site';
 
 export const metadata = {
   title: 'Verify Wallet | NAKA GO 中号',
-  description: 'Link a wallet to your SOTH by signing a single use challenge.',
+  description: 'Verify a wallet to your SOTH by signing a single use challenge.',
   robots: { index: false, follow: false },
 };
 
 const PERKS = [
   {
+    id: 'rain',
     icon: CloudRain,
-    title: 'Redeem Naka through Make It Rain',
+    title: (
+      <>
+        Redeem Naka through{' '}
+        <Link href="/rain" className="text-[#FF4D00] underline-offset-2 hover:underline">
+          Make It Rain
+        </Link>
+      </>
+    ),
     text: 'Make It Rain is the faucet that pays you to vibe with the Cult.',
   },
   {
+    id: 'payout',
     icon: TrendingUp,
     title: 'Bigger Make It Rain payouts',
-    text: 'A linked wallet bumps your daily multiplier.',
+    text: 'A verified wallet bumps your daily multiplier.',
   },
   {
+    id: 'nft',
     icon: Gem,
-    title: 'Unlock NFT holder perks',
+    title: (
+      <>
+        Unlock{' '}
+        <Link href="/claim" className="text-[#FF4D00] underline-offset-2 hover:underline">
+          NFT
+        </Link>{' '}
+        holder perks
+      </>
+    ),
     text: 'Hold a Naka relic and the holder rewards switch on.',
   },
 ];
@@ -40,13 +61,22 @@ export default function VerifyPage() {
           className="mt-3 text-5xl font-black leading-none text-white md:text-6xl"
           style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
         >
-          <span className="text-gradient-fire">LINK</span> YOUR WALLET
+          <span className="text-gradient-fire">VERIFY</span> YOUR WALLET
         </h1>
         <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/45">
-          Linking ties this wallet to your SOTH (State of the Hooman) profile.
+          Verifying ties this wallet to your SOTH (State of the Hooman) profile.
           Prove you control it by signing a single use message. No funds move, nothing is spent, and
           your private key never leaves your wallet. A signature is all it takes.
         </p>
+        <a
+          href={SOCIAL_LINKS.telegram}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-white/70 transition hover:text-white"
+          style={{ background: '#FF4D000f', border: '1px solid #FF4D0033' }}
+        >
+          <TelegramIcon className="h-4 w-4" /> New here? Start in @NakaGoInu
+        </a>
       </div>
 
       <div
@@ -57,11 +87,11 @@ export default function VerifyPage() {
         }}
       >
         <span className="mb-4 block text-[11px] font-black uppercase tracking-[0.25em] text-white/40">
-          Why link your wallet
+          Why verify your wallet
         </span>
         <ul className="flex flex-col gap-4">
           {PERKS.map((perk) => (
-            <li key={perk.title} className="flex items-start gap-3">
+            <li key={perk.id} className="flex items-start gap-3">
               <span
                 className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
                 style={{ background: '#FF4D0014', border: '1px solid #FF4D0033' }}

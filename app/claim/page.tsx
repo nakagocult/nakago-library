@@ -16,7 +16,18 @@ interface DropEntry {
   badge: string;
   cardImage: string;
   perks: ReactNode[];
+  footnote?: ReactNode;
 }
+
+// Shared postscript for perks that only apply while the relic sits in a verified wallet.
+const VERIFIED_WALLET_NOTE = (
+  <>
+    * Must be held in a{' '}
+    <Link href="/verify" className="font-semibold text-white/70 underline-offset-2 hover:underline">
+      verified wallet
+    </Link>
+  </>
+);
 
 const DROPS: DropEntry[] = [
   {
@@ -30,13 +41,26 @@ const DROPS: DropEntry[] = [
         <Link href="/rain" className="font-semibold text-white underline-offset-2 hover:underline">
           💧 Rain
         </Link>{' '}
-        multiplier
+        multiplier*
       </>,
       "Token credits toward Henk's art generators",
       'Lifetime access to Cult features across the swarm',
+      <>
+        Unlocks the{' '}
+        <a
+          href="https://nakalabs.xyz/naka-cult"
+          target="_blank"
+          rel="noreferrer"
+          className="font-semibold text-white underline-offset-2 hover:underline"
+        >
+          Cult portal
+        </a>{' '}
+        on Naka Labs
+      </>,
       'Tap in to the community',
       '10 Rare Boi pedigrees in the drop',
     ],
+    footnote: VERIFIED_WALLET_NOTE,
   },
   {
     drop: FOUNDER_PASS,
@@ -44,11 +68,30 @@ const DROPS: DropEntry[] = [
     badge: 'Drop 02',
     cardImage: '/nfts/naka-labs-logo.jpg',
     perks: [
+      <>
+        Increases your{' '}
+        <Link href="/rain" className="font-semibold text-white underline-offset-2 hover:underline">
+          💧 Rain
+        </Link>{' '}
+        multiplier*
+      </>,
       'Founder perks for life, subscription baked in',
-      'Priority access to every Naka Labs bootstrap',
+      'Early access to every Naka Labs feature',
+      'Invite to the Labs build Telegram chat*',
+      <>
+        See everything it unlocks at{' '}
+        <a
+          href="https://nakalabs.xyz"
+          target="_blank"
+          rel="noreferrer"
+          className="font-semibold text-white underline-offset-2 hover:underline"
+        >
+          nakalabs.xyz
+        </a>
+      </>,
       '60 Rare Boi tiers with elevated standing',
-      'Direct line into the Labs build pipeline',
     ],
+    footnote: VERIFIED_WALLET_NOTE,
   },
 ];
 
@@ -175,7 +218,7 @@ function ClaimBox({ entry }: { entry: DropEntry }) {
 
 /** The descriptive side: drop art as a dimmed backdrop with the perks checklist over it. */
 function PerksPanel({ entry }: { entry: DropEntry }) {
-  const { drop, cardImage, perks } = entry;
+  const { drop, cardImage, perks, footnote } = entry;
 
   return (
     <div
@@ -212,6 +255,9 @@ function PerksPanel({ entry }: { entry: DropEntry }) {
             </li>
           ))}
         </ul>
+        {footnote && (
+          <p className="mt-4 text-xs leading-relaxed text-white/40">{footnote}</p>
+        )}
       </div>
     </div>
   );

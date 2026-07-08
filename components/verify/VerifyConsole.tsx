@@ -10,7 +10,6 @@ import {
   Link2,
   PenLine,
   Clock,
-  XCircle,
 } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useSignMessage } from 'wagmi';
@@ -20,6 +19,8 @@ import {
   type Challenge,
   type SubmitResult,
 } from '@/lib/verify/api';
+import TelegramIcon from '@/components/shared/TelegramIcon';
+import { SOCIAL_LINKS } from '@/lib/site';
 
 // Terminal failure states (no retry) vs. inline errors (re-sign allowed).
 type Status =
@@ -30,19 +31,19 @@ type Status =
   | 'ready' // have the message; awaiting connect → sign
   | 'signing' // wallet prompt open
   | 'submitting' // POSTing the signature
-  | 'success'; // linked
+  | 'success'; // verified
 
 // Copy for inline submit errors (PRD §5). The user can re-sign; the nonce stays
 // valid until its TTL or a successful submit.
 const SUBMIT_ERROR_COPY: Record<string, string> = {
-  wallet_taken: 'That wallet is already linked to another account.',
-  hooman_taken: 'Your account already has a linked wallet.',
+  wallet_taken: 'That wallet is already verified to another account.',
+  hooman_taken: 'Your account already has a verified wallet.',
   bad_signature: "Couldn't read that signature — try signing again.",
   rpc_error: "Couldn't reach the chain just now. Try again in a minute.",
   rate_limited: 'Too many attempts. Wait a moment and retry.',
   collection_unavailable: 'Verification is temporarily unavailable — try again shortly.',
   bad_origin: 'Something went wrong with this request. Reload and try again.',
-  user_rejected: 'Signature cancelled. Sign the message to link your wallet.',
+  user_rejected: 'Signature cancelled. Sign the message to verify your wallet.',
   network_error: 'Network hiccup — check your connection and try again.',
   unknown: 'Something went wrong. Try signing again.',
 };
@@ -158,34 +159,64 @@ export default function VerifyConsole() {
           </Centered>
         )}
 
-        {/* Terminal: bad link */}
+        {/* No / bad nonce: send them to Telegram to start the flow. */}
         {status === 'invalid' && (
-          <Terminal
-            key="invalid"
-            icon={<XCircle className="h-7 w-7 text-white/50" />}
-            title="Invalid link"
-            body={
-              <>
-                This verification link is invalid. Run <Code>/verify</Code> in Telegram to get a
-                fresh one.
-              </>
-            }
-          />
+          <Centered key="invalid">
+            <div
+              className="flex h-14 w-14 items-center justify-center rounded-2xl text-[#FF4D00]"
+              style={{ background: '#FF4D0014', border: '1px solid #FF4D0033' }}
+            >
+              <TelegramIcon className="h-6 w-6" />
+            </div>
+            <h2
+              className="text-2xl font-black text-white"
+              style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
+            >
+              Verify in Telegram
+            </h2>
+            <p className="max-w-sm text-sm leading-relaxed text-white/50">
+              Your verification link starts in the chat. Open Telegram and run <Code>/verify</Code>{' '}
+              to get one.
+            </p>
+            <a
+              href={SOCIAL_LINKS.telegram}
+              target="_blank"
+              rel="noreferrer"
+              className="claim-action mt-2 inline-flex max-w-xs items-center justify-center gap-2"
+            >
+              <TelegramIcon className="h-4 w-4" /> Open @NakaGoInu
+            </a>
+          </Centered>
         )}
 
-        {/* Terminal: expired / used */}
+        {/* Bad nonce (expired, used, or unknown): send them back to Telegram to retry. */}
         {status === 'expired' && (
-          <Terminal
-            key="expired"
-            icon={<Clock className="h-7 w-7 text-white/50" />}
-            title="Link expired"
-            body={
-              <>
-                This link expired or was already used. Run <Code>/verify</Code> again in Telegram
-                for a new one (links last ~10 minutes and work once).
-              </>
-            }
-          />
+          <Centered key="expired">
+            <div
+              className="flex h-14 w-14 items-center justify-center rounded-2xl text-white/50"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
+              <AlertTriangle className="h-7 w-7" />
+            </div>
+            <h2
+              className="text-2xl font-black text-white"
+              style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
+            >
+              Invalid link
+            </h2>
+            <p className="max-w-sm text-sm leading-relaxed text-white/50">
+              This one expired or was already used (links last ~10 minutes and work once). Run{' '}
+              <Code>/verify</Code> in Telegram to try again.
+            </p>
+            <a
+              href={SOCIAL_LINKS.telegram}
+              target="_blank"
+              rel="noreferrer"
+              className="claim-action mt-2 inline-flex max-w-xs items-center justify-center gap-2"
+            >
+              <TelegramIcon className="h-4 w-4" /> Back to @NakaGoInu
+            </a>
+          </Centered>
         )}
 
         {/* Transient load failure — retryable */}
@@ -258,7 +289,7 @@ export default function VerifyConsole() {
                     </span>
                   ) : status === 'submitting' ? (
                     <span className="flex items-center justify-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" /> Linking…
+                      <Loader2 className="h-4 w-4 animate-spin" /> Verifying…
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-2">
@@ -357,34 +388,6 @@ function Centered({ children }: { children: React.ReactNode }) {
     >
       {children}
     </motion.div>
-  );
-}
-
-function Terminal({
-  icon,
-  title,
-  body,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  body: React.ReactNode;
-}) {
-  return (
-    <Centered>
-      <div
-        className="flex h-14 w-14 items-center justify-center rounded-2xl"
-        style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
-      >
-        {icon}
-      </div>
-      <h2
-        className="text-2xl font-black text-white"
-        style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.03em' }}
-      >
-        {title}
-      </h2>
-      <p className="max-w-sm text-sm leading-relaxed text-white/50">{body}</p>
-    </Centered>
   );
 }
 
