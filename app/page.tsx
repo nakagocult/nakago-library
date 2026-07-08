@@ -23,26 +23,22 @@ const TIMELINE = [
   {
     year: '1945',
     title: 'On the Brink',
-    text: 'Post-war Japan leaves the Shiba all but extinct. NIPPO — the Nihon Ken Hozonkai, founded 1928 to preserve the native breeds, keeping detailed pedigrees since 1932 — has almost nothing left to save.',
-    source: { href: NIPPO_HISTORY, label: 'Nihon Ken Hozonkai archives' },
+    text: 'Postwar Japan leaves the Shiba all but extinct. NIPPO, the Nihon Ken Hozonkai, founded in 1928 to preserve the native breeds and keeping detailed pedigrees since 1932, has almost nothing left to save.',
   },
   {
     year: '1948',
     title: 'A Legend Is Born',
-    text: 'Naka Go is born April 16 in the Akaishi-so kennel — sire Akani Go, dam Beniko Go, both tracing to Aka Go Fugaku, the Father of the Shiba. Logged with NIPPO as registration #1216.',
-    source: { href: NIPPO_PEDIGREE, label: 'NIPPO pedigree #1216' },
+    text: 'Naka Go is born April 16 in the Akaishiso kennel. His sire Akani Go and dam Beniko Go both trace to Aka Go Fugaku, the Father of the Shiba. Logged with NIPPO as registration #1216.',
   },
   {
     year: '1950s',
     title: 'The Founding Dog',
-    text: "NIPPO's own history names him the founding dog of the postwar Shiba restoration — the Akaishi line, merging the Shinshu, Mino & San'in bloodlines through him.",
-    source: { href: NIPPO_HISTORY, label: 'Preservation society records' },
+    text: "NIPPO's own history names him the founding dog of the postwar Shiba restoration. He anchors the Akaishi line, merging the Shinshu, Mino, and San'in bloodlines through him.",
   },
   {
     year: '1963',
     title: 'Legacy Secured',
-    text: 'He passes Dec 23, his blood carried on through 14 documented offspring — and today runs in 80% of every Shiba alive.',
-    source: { href: NIPPO_PEDIGREE, label: 'Modern lineage analysis' },
+    text: 'He passes Dec 23, his blood carried on through 14 documented offspring, and today it runs in 80% of every Shiba alive.',
   },
 ];
 
@@ -146,7 +142,7 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.65 }}
             className="mt-6 max-w-xl text-base leading-relaxed text-white/60 md:text-lg"
           >
-            Born 1948 of the Akaishi line. Guardian of the breed — his bloodline still runs
+            Born 1948 of the Akaishi line. Guardian of the breed, his bloodline still runs
             through <span className="font-semibold text-[#FF4D00]">80%</span> of modern Shiba
             Inus, and the $NAKA token honors that legacy on-chain.
           </motion.p>
@@ -279,16 +275,6 @@ export default function HomePage() {
                 {beat.title}
               </div>
               <p className="mt-2 text-sm leading-relaxed text-white/55">{beat.text}</p>
-              {beat.source && (
-                <a
-                  href={beat.source.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.08em] text-[#FF4D00]/75 transition-colors hover:text-[#FF4D00]"
-                >
-                  {beat.source.label} <ArrowUpRight className="h-3 w-3" />
-                </a>
-              )}
             </motion.div>
           ))}
         </div>
@@ -311,9 +297,9 @@ export default function HomePage() {
                 <ScrollText className="h-4 w-4" /> Real Provenance
               </div>
               <p className="mt-3 text-sm leading-relaxed text-white/70 md:text-base">
-                Not lore we made up. <span className="font-bold text-white">Naka Go Akaishi-so</span>,
-                NIPPO registration <span className="font-bold text-white">#1216</span> — sire Akani Go,
-                dam Beniko Go, both descending from{' '}
+                <span className="font-bold text-white">Naka Go Akaishiso</span>, NIPPO registration{' '}
+                <span className="font-bold text-white">#1216</span>, with sire Akani Go and dam
+                Beniko Go, both descending from{' '}
                 <span className="font-bold text-white">Aka Go Fugaku, the Father of the Shiba</span>.
                 Shown at the 12th NIPPO Grand National, 1949. Every fact is on file with the society
                 that saved the breed.
@@ -327,7 +313,7 @@ export default function HomePage() {
                 className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
                 style={{ background: 'linear-gradient(135deg, #FF4D00, #FF0000)', boxShadow: '0 0 24px rgba(255,77,0,0.5)', fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.08em' }}
               >
-                View His NIPPO Pedigree <ArrowUpRight className="h-4 w-4" />
+                NIPPO Pedigree #1216 <ArrowUpRight className="h-4 w-4" />
               </a>
               <a
                 href={NIPPO_HISTORY}
@@ -336,7 +322,7 @@ export default function HomePage() {
                 className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-bold text-white/80 transition-colors hover:text-white"
                 style={{ border: '1px solid rgba(255,77,0,0.4)', fontFamily: 'Bebas Neue, Impact, sans-serif', letterSpacing: '0.08em' }}
               >
-                Read NIPPO&apos;s History <ArrowUpRight className="h-4 w-4" />
+                Nihon Ken History <ArrowUpRight className="h-4 w-4" />
               </a>
             </div>
           </div>

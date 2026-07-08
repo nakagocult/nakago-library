@@ -11,10 +11,10 @@ import { getDdergoTracks } from '@/lib/ddergo-tracks';
 export const metadata: Metadata = {
   title: 'NAKA GO 中号 | The Shiba Who Saved The Breed',
   description:
-    'Born 1948. Guardian of the breed — his bloodline still runs through 80% of modern Shiba Inus. The $NAKA token honors the real historical legacy of Naka Go of Akaishi-so.',
+    'Born 1948. Guardian of the breed, his bloodline still runs through 80% of modern Shiba Inus. The $NAKA token honors the real historical legacy of Naka Go of Akaishiso.',
   openGraph: {
     title: 'NAKA GO 中号 | The Shiba Who Saved The Breed',
-    description: 'Born 1948. Guardian of the breed — his bloodline still runs through 80% of modern Shiba Inus.',
+    description: 'Born 1948. Guardian of the breed, his bloodline still runs through 80% of modern Shiba Inus.',
     type: 'website',
   },
 };

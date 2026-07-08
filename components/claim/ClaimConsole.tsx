@@ -94,7 +94,7 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
           className="text-3xl font-black leading-tight"
           style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: '#fff' }}
         >
-          {stats.priceLabel ?? '—'}
+          {stats.priceLabel ?? '…'}
         </span>
         <span className="text-sm font-bold text-white/35">/ each</span>
       </div>
@@ -187,7 +187,7 @@ export default function ClaimConsole({ drop, maxPerTx }: ClaimConsoleProps) {
         {status === 'success' && (
           <>
             <StatusNote key="ok" tone="ok">
-              <CheckCircle2 className="h-4 w-4" /> Mint confirmed — welcome to the swarm.
+              <CheckCircle2 className="h-4 w-4" /> Mint confirmed. Welcome to the swarm.
             </StatusNote>
             <MintReveal drop={drop} tokenIds={mintedIds} />
           </>

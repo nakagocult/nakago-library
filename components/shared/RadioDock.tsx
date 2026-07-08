@@ -141,6 +141,14 @@ export default function RadioDock({ tracks }: { tracks: RadioTrack[] }) {
 
       {/* Track list popover */}
       {listOpen && (
+        <>
+        {/* Click-outside backdrop: sits below the popover (z-61) and dock bar
+            (z-60) so tapping anywhere in the page dismisses the list. */}
+        <div
+          className="fixed inset-0 z-[59]"
+          aria-hidden
+          onClick={() => setListOpen(false)}
+        />
         <div
           className="fixed bottom-[76px] left-1/2 z-[61] max-h-[50vh] w-[min(420px,calc(100vw-1.5rem))] -translate-x-1/2 overflow-y-auto rounded-2xl p-1.5"
           style={{
@@ -156,13 +164,14 @@ export default function RadioDock({ tracks }: { tracks: RadioTrack[] }) {
               className="text-[11px] font-black uppercase tracking-[0.2em] text-white/50"
               style={{ fontFamily: 'Bebas Neue, Impact, sans-serif' }}
             >
-              DDERGO RECORDS — {tracks.length} tracks
+              DDERGO RECORDS · {tracks.length} tracks
             </span>
             <button type="button" onClick={() => setListOpen(false)} aria-label="Close list" className="text-white/40 hover:text-white">
               <X className="h-4 w-4" />
             </button>
           </div>
-          {tracks.map((t, i) => {
+          {queue().map((i) => {
+            const t = tracks[i];
             const active = i === index;
             return (
               <button
@@ -184,6 +193,7 @@ export default function RadioDock({ tracks }: { tracks: RadioTrack[] }) {
             );
           })}
         </div>
+        </>
       )}
 
       {/* The dock bar */}

@@ -23,7 +23,7 @@ export default function MintProgress({ claimed, total, rareBois, accent, loading
             className="text-4xl font-black leading-none"
             style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', color: accent[0] }}
           >
-            {loading ? '—' : <CountUp end={claimed} duration={1.4} separator="," preserveValue />}
+            {loading ? '…' : <CountUp end={claimed} duration={1.4} separator="," preserveValue />}
           </span>
           <span className="text-lg font-bold text-white/35" style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif' }}>
             / {total} claimed

@@ -6,7 +6,7 @@ import { SOCIAL_LINKS } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Henk | NAKA GO 中号',
-  description: "Meet Henk — the Cult's AI. He pays hoomans to show up, runs Make It Rain, and shapes the swarm.",
+  description: "Meet Henk, the Cult's AI. He pays hoomans to show up, runs Make It Rain, and shapes the swarm.",
 };
 
 export default function HenkPage() {
@@ -41,7 +41,7 @@ export default function HenkPage() {
       </h1>
 
       <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-white/55">
-        Henk is our AI bot — the one paying hoomans to show up, running{' '}
+        Henk is our AI bot, the one paying hoomans to show up, running{' '}
         <Link href="/rain" className="font-bold text-[#FF4D00] underline-offset-2 hover:underline">
           Make It Rain
         </Link>

@@ -38,13 +38,13 @@ type Status =
 const SUBMIT_ERROR_COPY: Record<string, string> = {
   wallet_taken: 'That wallet is already verified to another account.',
   hooman_taken: 'Your account already has a verified wallet.',
-  bad_signature: "Couldn't read that signature — try signing again.",
+  bad_signature: "Couldn't read that signature. Try signing again.",
   rpc_error: "Couldn't reach the chain just now. Try again in a minute.",
   rate_limited: 'Too many attempts. Wait a moment and retry.',
-  collection_unavailable: 'Verification is temporarily unavailable — try again shortly.',
+  collection_unavailable: 'Verification is temporarily unavailable. Try again shortly.',
   bad_origin: 'Something went wrong with this request. Reload and try again.',
   user_rejected: 'Signature cancelled. Sign the message to verify your wallet.',
-  network_error: 'Network hiccup — check your connection and try again.',
+  network_error: 'Network hiccup. Check your connection and try again.',
   unknown: 'Something went wrong. Try signing again.',
 };
 
