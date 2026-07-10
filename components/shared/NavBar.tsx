@@ -6,19 +6,9 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Wallet } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { MASCOT_URL, SOCIAL_LINKS } from '@/lib/site';
+import { MASCOT_URL, NAV_LINKS, SOCIAL_LINKS } from '@/lib/site';
 import CopyAddress from '@/components/shared/CopyAddress';
 import TelegramIcon from '@/components/shared/TelegramIcon';
-
-const LINKS = [
-  { href: '/', label: 'Home' },
-  { href: '/henk', label: 'Henk' },
-  { href: '/rain', label: 'Rain' },
-  { href: '/claim', label: 'Claim' },
-  { href: '/view', label: 'View' },
-  { href: '/mosaic', label: 'Mosaic' },
-  { href: '/cawf', label: 'CAWF' },
-];
 
 const XIcon = () => (
   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
@@ -219,7 +209,7 @@ export default function NavBar() {
                   className="absolute right-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-xl p-1.5 backdrop-blur-xl"
                   style={{ background: 'rgba(17,17,17,0.92)', border: '1px solid rgba(255,77,0,0.2)', boxShadow: '0 12px 40px rgba(0,0,0,0.5)' }}
                 >
-                  {LINKS.map((link) => {
+                  {NAV_LINKS.map((link) => {
                     const active = pathname === link.href;
                     const hot = hovered === link.href;
 
