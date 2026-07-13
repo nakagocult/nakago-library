@@ -28,6 +28,13 @@ const nextConfig: NextConfig = {
         source: '/api/verify/:path*',
         destination: `${verifyBackend}/api/verify/:path*`,
       },
+      // The /observatory page reads henk's public metrics lens from the same
+      // bot process (read-only JSON; the bot curates what is public). Same
+      // origin trick, same env var, same fail-safe: no env, no rewrite.
+      {
+        source: '/api/henk/:path*',
+        destination: `${verifyBackend}/api/henk/:path*`,
+      },
     ];
   },
 };
