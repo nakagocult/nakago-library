@@ -19,6 +19,8 @@ export interface EngagementDay {
   burst_median_gap_s: number | null;
   overlap_pct: number | null;
   circular_r: number | null;
+  corolled_pct: number | null;
+  crowd_depth: number | null;
   messages: number | null;
   commands: number | null;
   chatters_anon: number | null;

@@ -35,6 +35,7 @@ const SUM_FIELDS = [
 // (most-rolls) canvas instead, which in practice is the nom chat
 const DOMINANT_FIELDS = [
   'dominance_pct', 'overlap_pct', 'circular_r', 'burst_median_gap_s',
+  'corolled_pct', 'crowd_depth',
 ] as const;
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
@@ -399,12 +400,15 @@ export default function ObservatoryDashboard() {
               <Spark title="subs per party" points={sparkOf('per_party')} />
               <Spark title="cap27 hoomans" points={sparkOf('base_cap_hoomans')} />
               <Spark title="klozums minted" points={sparkOf('klozums_minted')} />
-              <Spark title="overlap %" points={sparkOf('overlap_pct')} />
+              <Spark title="co-rolled %" points={sparkOf('corolled_pct')} />
+              <Spark title="crowd depth" points={sparkOf('crowd_depth')} />
               <Spark title="resonance r" points={sparkOf('circular_r')} />
             </div>
             <p className="mt-3 text-[11px] text-white/30">
               🌱 marks a cawf day: rolls rest by design, so dips there are the
-              plan working, not the swarm fading.
+              plan working, not the swarm fading. co-rolled % is the share of
+              rolls made within 5 minutes of another hooman; crowd depth is
+              how many others were in that window, on average.
             </p>
           </>
         )}
