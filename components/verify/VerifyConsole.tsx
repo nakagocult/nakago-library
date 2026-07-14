@@ -10,6 +10,7 @@ import {
   Link2,
   PenLine,
   Clock,
+  Ghost,
 } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useSignMessage } from 'wagmi';
@@ -64,6 +65,23 @@ export default function VerifyConsole() {
   const [result, setResult] = useState<SubmitResult | null>(null);
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
+  const [phantomDeeplink, setPhantomDeeplink] = useState<string | null>(null);
+
+  // Phantom has no WalletConnect path (its RainbowKit connector is
+  // injected-only), so on a phone browser with no injected provider the only
+  // way to sign is the wallet's own in-app browser. Detect that case after
+  // mount (SSR-safe) and offer a universal link that reopens this exact URL,
+  // nonce intact, inside Phantom's browser, where its provider is injected
+  // and the normal connect → sign flow works.
+  useEffect(() => {
+    const mobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    const injected = (window as { ethereum?: unknown }).ethereum != null;
+    if (!mobile || injected) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPhantomDeeplink(
+      `https://phantom.app/ul/browse/${encodeURIComponent(window.location.href)}?ref=${encodeURIComponent(window.location.origin)}`,
+    );
+  }, []);
 
   // Fetch the challenge. State updates happen only after the await, so this is
   // safe to call straight from an effect (no synchronous setState cascade).
@@ -274,8 +292,27 @@ export default function VerifyConsole() {
             {/* Action */}
             <div className="relative z-20">
               {!isConnected ? (
-                <div className="claim-connect flex justify-center">
-                  <ConnectButton label="Connect Wallet" />
+                <div className="flex flex-col gap-3">
+                  <div className="claim-connect flex justify-center">
+                    <ConnectButton label="Connect Wallet" />
+                  </div>
+                  {phantomDeeplink && (
+                    <>
+                      <p className="text-center text-[10px] uppercase tracking-[0.2em] text-white/30">
+                        Phantom on this phone?
+                      </p>
+                      <a
+                        href={phantomDeeplink}
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold text-[#AB9FF2] transition-opacity hover:opacity-80"
+                        style={{
+                          background: 'rgba(171,159,242,0.08)',
+                          border: '1px solid rgba(171,159,242,0.35)',
+                        }}
+                      >
+                        <Ghost className="h-4 w-4" /> Open in Phantom
+                      </a>
+                    </>
+                  )}
                 </div>
               ) : (
                 <button
