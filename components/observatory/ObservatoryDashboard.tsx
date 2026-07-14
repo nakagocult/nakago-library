@@ -7,9 +7,11 @@ import {
   agoLabel,
   bucketLabel,
   loadPulse,
+  ritualName,
   shortDay,
   EngagementDay,
   Pulse,
+  RITUAL_ORDER,
   WayStep,
 } from '@/lib/observatory';
 
@@ -134,8 +136,9 @@ export default function ObservatoryDashboard() {
     return () => clearInterval(t);
   }, []);
 
-  // ---- the macro event chart: one sparkline per bucket, busiest first
-  const eventSparks = useMemo(() => {
+  // ---- the macro event chart: system buckets busiest-first in the main
+  // grid; rituals split into their own subsection, siblings adjacent
+  const { eventSparks, ritualSparks } = useMemo(() => {
     const rows = pulse?.events ?? [];
     const axis = [...new Set(rows.map((r) => r.gm_day))].sort();
     const byBucket = new Map<string, Map<string, number>>();
@@ -144,14 +147,26 @@ export default function ObservatoryDashboard() {
       m.set(r.gm_day, r.n);
       byBucket.set(r.bucket, m);
     }
-    return [...byBucket.entries()]
-      .map(([bucket, m]) => ({
-        bucket,
-        label: bucketLabel(bucket),
-        total: [...m.values()].reduce((a, b) => a + b, 0),
-        points: axis.map((d) => ({ label: shortDay(d), value: m.get(d) ?? 0 })),
-      }))
-      .sort((a, b) => b.total - a.total);
+    const all = [...byBucket.entries()].map(([bucket, m]) => ({
+      bucket,
+      label: bucketLabel(bucket),
+      ritual: ritualName(bucket),
+      total: [...m.values()].reduce((a, b) => a + b, 0),
+      points: axis.map((d) => ({ label: shortDay(d), value: m.get(d) ?? 0 })),
+    }));
+    const rituals = all
+      .filter((s) => s.ritual !== null)
+      .sort((a, b) => {
+        const ia = RITUAL_ORDER.indexOf(a.ritual as string);
+        const ib = RITUAL_ORDER.indexOf(b.ritual as string);
+        if (ia !== -1 && ib !== -1) return ia - ib;
+        if (ia !== ib) return ia === -1 ? 1 : -1; // unlisted append after
+        return b.total - a.total;
+      });
+    return {
+      eventSparks: all.filter((s) => s.ritual === null).sort((a, b) => b.total - a.total),
+      ritualSparks: rituals,
+    };
   }, [pulse?.events]);
 
   // ---- engagement, all canvases collapsed into one swarm view: count
@@ -331,13 +346,25 @@ export default function ObservatoryDashboard() {
           so the rest stays readable, and curation votes chart per surface.
           Nobody is named, ever.
         </p>
-        {eventSparks.length === 0 ? (
+        {eventSparks.length === 0 && ritualSparks.length === 0 ? (
           <p className="text-sm text-white/40">quiet for now, the swarm rests.</p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {eventSparks.map((s) => (
               <Spark key={s.bucket} title={s.label} points={s.points} />
             ))}
+          </div>
+        )}
+        {ritualSparks.length > 0 && (
+          <div className="mt-5">
+            <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">
+              the rituals
+            </p>
+            <div className="mt-2 grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              {ritualSparks.map((s) => (
+                <Spark key={s.bucket} title={s.label} points={s.points} />
+              ))}
+            </div>
           </div>
         )}
       </Panel>
