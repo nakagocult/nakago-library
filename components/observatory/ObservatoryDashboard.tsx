@@ -5,11 +5,12 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import Spark, { SparkPoint } from '@/components/observatory/Spark';
 import {
   agoLabel,
+  bucketLabel,
   loadPulse,
   shortDay,
-  BUCKET_LABELS,
   EngagementDay,
   Pulse,
+  WayStep,
 } from '@/lib/observatory';
 
 // The observatory: every instrument on one page, read only. The bot decides
@@ -34,6 +35,7 @@ const SUM_FIELDS = [
 // (most-rolls) canvas instead, which in practice is the nom chat
 const DOMINANT_FIELDS = [
   'dominance_pct', 'overlap_pct', 'circular_r', 'burst_median_gap_s',
+  'corolled_pct', 'crowd_depth',
 ] as const;
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
@@ -145,7 +147,7 @@ export default function ObservatoryDashboard() {
     return [...byBucket.entries()]
       .map(([bucket, m]) => ({
         bucket,
-        label: BUCKET_LABELS[bucket] ?? bucket,
+        label: bucketLabel(bucket),
         total: [...m.values()].reduce((a, b) => a + b, 0),
         points: axis.map((d) => ({ label: shortDay(d), value: m.get(d) ?? 0 })),
       }))
@@ -192,6 +194,22 @@ export default function ObservatoryDashboard() {
         value: typeof d[field] === 'number' ? (d[field] as number) : null,
         flag: d.cawf,
       }));
+
+  // ---- the way funnel: steps grouped by path in walk order; dormant
+  // paths (nobody past the door yet) stay off the page
+  const wayPaths = useMemo(() => {
+    const byPath = new Map<string, WayStep[]>();
+    for (const w of pulse?.way ?? []) {
+      byPath.set(w.path, [...(byPath.get(w.path) ?? []), w]);
+    }
+    return [...byPath.entries()]
+      .filter(([, steps]) => steps.some((s) => s.n > 0))
+      .map(([path, steps]) => ({
+        path,
+        max: Math.max(...steps.map((s) => s.n), 1),
+        steps,
+      }));
+  }, [pulse?.way]);
 
   const notesByDay = useMemo(() => {
     const map = new Map<string, string[]>();
@@ -310,7 +328,8 @@ export default function ObservatoryDashboard() {
       <Panel title="The Ticker 🧾">
         <p className="mb-3 text-xs leading-relaxed text-white/40">
           How much of each thing happened, per day. Granted noms chart alone
-          so the rest stays readable. Nobody is named, ever.
+          so the rest stays readable, and curation votes chart per surface.
+          Nobody is named, ever.
         </p>
         {eventSparks.length === 0 ? (
           <p className="text-sm text-white/40">quiet for now, the swarm rests.</p>
@@ -322,6 +341,50 @@ export default function ObservatoryDashboard() {
           </div>
         )}
       </Panel>
+
+      {/* the way funnel — how deep the swarm walks the progression */}
+      {wayPaths.length > 0 && (
+        <Panel title="The Way 🧭">
+          <p className="mb-3 text-xs leading-relaxed text-white/40">
+            How many hoomans have walked each step of the way, all time. Where
+            the bars thin out is where the journey stalls. Counts only, nobody
+            is named.
+          </p>
+          <div className="grid gap-5 lg:grid-cols-2">
+            {wayPaths.map((p) => (
+              <div key={p.path}>
+                <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">
+                  {p.path.replace(/_/g, ' ')}
+                </p>
+                <ul className="mt-2 flex flex-col gap-2">
+                  {p.steps.map((s) => (
+                    <li key={s.step} className="flex items-center gap-3 text-xs">
+                      <span className="w-32 shrink-0 truncate text-white/55" title={s.step}>
+                        {s.step.replace(/_/g, ' ')}
+                      </span>
+                      <span
+                        className="relative h-2 flex-1 overflow-hidden rounded-full"
+                        style={{ background: 'rgba(255,255,255,0.06)' }}
+                      >
+                        <span
+                          className="absolute inset-y-0 left-0 rounded-full"
+                          style={{
+                            width: `${s.n > 0 ? Math.max(2, (s.n / p.max) * 100) : 0}%`,
+                            background: FIRE,
+                          }}
+                        />
+                      </span>
+                      <span className="w-10 shrink-0 text-right font-mono text-white/80">
+                        {s.n}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      )}
 
       {/* engagement — every canvas collapsed into one swarm */}
       <Panel title="The Swarm 🌀">
@@ -337,12 +400,15 @@ export default function ObservatoryDashboard() {
               <Spark title="subs per party" points={sparkOf('per_party')} />
               <Spark title="cap27 hoomans" points={sparkOf('base_cap_hoomans')} />
               <Spark title="klozums minted" points={sparkOf('klozums_minted')} />
-              <Spark title="overlap %" points={sparkOf('overlap_pct')} />
+              <Spark title="co-rolled %" points={sparkOf('corolled_pct')} />
+              <Spark title="crowd depth" points={sparkOf('crowd_depth')} />
               <Spark title="resonance r" points={sparkOf('circular_r')} />
             </div>
             <p className="mt-3 text-[11px] text-white/30">
               🌱 marks a cawf day: rolls rest by design, so dips there are the
-              plan working, not the swarm fading.
+              plan working, not the swarm fading. co-rolled % is the share of
+              rolls made within 5 minutes of another hooman; crowd depth is
+              how many others were in that window, on average.
             </p>
           </>
         )}
