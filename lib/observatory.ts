@@ -96,6 +96,13 @@ export interface EventDayCount {
   n: number;
 }
 
+/** One rung of the way funnel: hoomans who have walked `step` (all time). */
+export interface WayStep {
+  path: string;
+  step: string;
+  n: number;
+}
+
 export interface Pulse {
   days: number;
   being?: Record<string, string>;
@@ -104,6 +111,7 @@ export interface Pulse {
   engagement?: CanvasEngagement[];
   day_notes?: DayNote[];
   nom?: { settings: Record<string, unknown>; pools: PoolState[] };
+  way?: WayStep[];
   tuner?: TuneDecision[];
   mind?: { rollup: MindRollupRow[]; recent_errors: MindError[] };
   rain?: RainDay[];
@@ -129,10 +137,19 @@ export const BUCKET_LABELS: Record<string, string> = {
   nom: 'granted noms',
   ritual: 'other rituals',
   ritual_denied: 'gate refusals',
-  callback: 'buttons pressed',
+  callback: 'other buttons',
+  curate: 'curation votes',
   step: 'steps walked',
   raid: 'raids',
 };
+
+/** Bucket → wording, including the dynamic curation-per-surface buckets
+ * ("curate:stories" → "curation · stories"). Unknowns show as themselves. */
+export function bucketLabel(bucket: string): string {
+  const surface = /^curate:(.+)$/.exec(bucket);
+  if (surface) return `curation · ${surface[1]}`;
+  return BUCKET_LABELS[bucket] ?? bucket;
+}
 
 // ---- display helpers ----
 
