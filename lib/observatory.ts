@@ -146,12 +146,43 @@ export const BUCKET_LABELS: Record<string, string> = {
 };
 
 /** Bucket → wording, including the dynamic curation-per-surface buckets
- * ("curate:stories" → "curation · stories"). Unknowns show as themselves. */
+ * ("curate:stories" → "curation · stories") and the ritual buckets
+ * ("ritual:soth" → "soth"). Unknowns show as themselves. */
 export function bucketLabel(bucket: string): string {
   const surface = /^curate:(.+)$/.exec(bucket);
   if (surface) return `curation · ${surface[1]}`;
+  const rit = ritualName(bucket);
+  if (rit) return rit;
   return BUCKET_LABELS[bucket] ?? bucket;
 }
+
+/** The non-ritual event kinds the bot emits — anything else that isn't
+ * "ritual:"-prefixed is a ritual from an API older than the prefix contract,
+ * so it still lands in the rituals subsection instead of the main grid. */
+const KNOWN_KINDS = new Set([
+  'nom', 'step', 'raid', 'callback', 'curate', 'ritual', 'ritual_denied',
+  'message', 'media',
+]);
+
+/** Bare ritual name if this bucket belongs in the rituals subsection. */
+export function ritualName(bucket: string): string | null {
+  const m = /^ritual:(.+)$/.exec(bucket);
+  if (m) return m[1];
+  if (!KNOWN_KINDS.has(bucket) && !bucket.startsWith('curate:')) return bucket;
+  return null;
+}
+
+/** Display order for the rituals subsection: siblings sit together
+ * (identity, fragments/art pairs, wallet pair). Unlisted rituals append
+ * after, busiest first. */
+export const RITUAL_ORDER = [
+  'soth', 'wtf', 'stories',
+  'pool', 'gift', 'offer',
+  'nomparty', 'cawf',
+  'mynaka', 'pfp', 'mosaic', 'voice',
+  'link',
+  'verify', 'unverify',
+];
 
 // ---- display helpers ----
 
