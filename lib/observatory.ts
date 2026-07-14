@@ -14,6 +14,7 @@ export interface EngagementDay {
   fragment_submitters: number | null;
   klozums_minted: number | null;
   base_cap_hoomans: number | null;
+  round_submitter_sum: number | null;
   dominance_pct: number | null;
   burst_median_gap_s: number | null;
   overlap_pct: number | null;
@@ -88,10 +89,18 @@ export interface PoolState {
   levels: Record<string, number>;
 }
 
+/** One cell of the macro event chart: how many of `bucket` on `gm_day`. */
+export interface EventDayCount {
+  gm_day: string;
+  bucket: string;
+  n: number;
+}
+
 export interface Pulse {
   days: number;
   being?: Record<string, string>;
   canvases?: Array<{ label: string; rituals: string[]; powers: string[] }>;
+  events?: EventDayCount[];
   engagement?: CanvasEngagement[];
   day_notes?: DayNote[];
   nom?: { settings: Record<string, unknown>; pools: PoolState[] };
@@ -101,16 +110,7 @@ export interface Pulse {
   tides?: { registry: TideEntry[]; pending: PendingJob[] };
 }
 
-export interface TickerEvent {
-  id: number;
-  ts: string;
-  kind: string;
-  ref: string | null;
-  canvas: string;
-}
-
 export type PulseResponse = { ok: true; pulse: Pulse } | { ok: false };
-export type TickerResponse = { ok: true; events: TickerEvent[] } | { ok: false };
 
 export async function loadPulse(days = 30): Promise<PulseResponse> {
   try {
@@ -124,18 +124,15 @@ export async function loadPulse(days = 30): Promise<PulseResponse> {
   }
 }
 
-export async function loadTicker(after = 0): Promise<TickerResponse> {
-  try {
-    const res = await fetch(`/api/henk/ticker?after=${after}`, {
-      headers: { Accept: 'application/json' },
-    });
-    if (!res.ok) return { ok: false };
-    const body = (await res.json()) as { events?: TickerEvent[] };
-    return { ok: true, events: body.events ?? [] };
-  } catch {
-    return { ok: false };
-  }
-}
+/** The macro chart's per-bucket wording. Unknown buckets show as themselves. */
+export const BUCKET_LABELS: Record<string, string> = {
+  nom: 'granted noms',
+  ritual: 'other rituals',
+  ritual_denied: 'gate refusals',
+  callback: 'buttons pressed',
+  step: 'steps walked',
+  raid: 'raids',
+};
 
 // ---- display helpers ----
 
@@ -156,21 +153,3 @@ export function agoLabel(ms: number): string {
   return `${Math.round(m / 60)}h ago`;
 }
 
-/** The collective phrasing of a ticker event: the lens never names anyone. */
-export function eventLine(e: TickerEvent): string {
-  const ref = e.ref ?? '';
-  switch (e.kind) {
-    case 'ritual':
-      return ref ? `a hooman performed /${ref}` : 'a hooman performed a ritual';
-    case 'ritual_denied':
-      return ref ? `the gate held /${ref} closed` : 'the gate held a ritual closed';
-    case 'callback':
-      return ref ? `a button was pressed: ${ref}` : 'a button was pressed';
-    case 'step':
-      return ref ? `a hooman walked ${ref}` : 'a hooman walked a step';
-    case 'raid':
-      return 'the swarm stirred for a raid';
-    default:
-      return ref ? `${e.kind}: ${ref}` : e.kind;
-  }
-}
