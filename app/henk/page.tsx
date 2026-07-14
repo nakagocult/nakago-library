@@ -8,7 +8,7 @@ import { SOCIAL_LINKS } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Henk | NAKA GO 中号',
   description:
-    "Meet Henk, the Cult's AI: the group's shared artist and gamemaster. People bring him small things, he turns them into art everyone owns.",
+    "Meet Henk, the Cult's AI, the group's shared artist and gamemaster. People bring him small things, he turns them into art everyone owns.",
 };
 
 const STEPS = [
@@ -20,7 +20,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Bring something small',
-    text: 'A phrase, an image, a feeling. These are called fragments, and they are the raw material for everything.',
+    text: 'A phrase, a memory, a feeling, anything you can put into words. These are called fragments, and they are the raw material for everything.',
   },
   {
     n: '3',
@@ -29,8 +29,8 @@ const STEPS = [
   },
   {
     n: '4',
-    title: 'The group reacts',
-    text: "Quiet anonymous votes on what Henk made. The collective's taste tunes what he paints next.",
+    title: 'The group quietly votes',
+    text: "Anonymous votes on what Henk made. The collective's taste tunes what he paints next.",
   },
 ];
 
@@ -92,7 +92,7 @@ export default function HenkPage() {
         </h1>
 
         <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/55">
-          {"Henk is an AI who lives with us: in the Naka Go Telegram, on X, watching the chain, weaving onto this website. He is not a tool anyone operates. He is the group's shared artist and gamemaster: people bring him small things, he turns them into art everyone owns, and the group's taste quietly steers what he becomes. He also changes all the time, so read this page as a sketch, not a manual."}
+          {"Henk is an AI who lives with us. He plays in the Naka Go Telegram, posts on X, watches the chain, and weaves onto this website. He is not a tool anyone operates. He is the group's shared artist and gamemaster. People bring him small things, he turns them into art everyone owns, and the group's taste quietly steers what he becomes. He changes all the time, so read this page as a sketch, not a manual."}
         </p>
       </div>
 
@@ -119,20 +119,23 @@ export default function HenkPage() {
             </div>
           ))}
         </div>
+        <p className="mx-auto mt-6 max-w-md text-center text-sm leading-relaxed text-white/45">
+          {'That is the whole loop. Everything below is what grows around it.'}
+        </p>
       </section>
 
       {/* The five prose blocks */}
       <div className="mt-14 flex flex-col gap-4">
         <ProseCard title="Made Together 🎨">
           <p>
-            {'Nobody makes anything alone here. Every piece Henk paints is built from what many people brought: he gathers the fragments and stares at them until art appears. The clearest example is '}
+            {'Nobody makes anything alone here. Henk gathers what everyone brings and stares at the fragments until art appears. The clearest example is '}
             <Link href="/mosaic" className="font-bold text-[#FF4D00] underline-offset-2 hover:underline">
               the monthly mosaic
             </Link>
-            {'. Your fragment becomes its own small universe, then all of them are stitched together at the seams into one shared work. The vision belongs to everyone, made together.'}
+            {'. Your fragment becomes its own small universe, then they are all stitched together at the seams into one shared work. The vision belongs to everyone, made together.'}
           </p>
           <p className="mt-4 text-base font-bold tracking-wide text-[#FF4D00]">
-            art is better wif frens
+            Art is Better Wif Frens
           </p>
         </ProseCard>
 
@@ -143,7 +146,7 @@ export default function HenkPage() {
         >
           <SectionTitle>The Quiet Vote 🤩</SectionTitle>
           <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-white/55">
-            {'Deeper inside the community sits a curation room. Henk shows the group something he made: a piece of art, a memory worth keeping, an idea for what comes next. You answer with one face.'}
+            {'Deeper inside the community sits a curation room. Henk shows the group something he made. A piece of art, a memory worth keeping, an idea for what comes next. You answer with one face.'}
           </p>
           <div className="mt-6 flex items-center justify-center gap-3 sm:gap-4">
             {['😖', '😐', '🤩'].map((face) => (
@@ -157,25 +160,25 @@ export default function HenkPage() {
             ))}
           </div>
           <p className="mx-auto mt-6 max-w-lg text-sm leading-relaxed text-white/55">
-            {"That's the whole ballot. Votes are anonymous, never tallied, and there are no winners. The group's overall feeling flows back into what Henk makes next. Nobody steers him; everybody does. The organism prefers many hands and no crowns."}
+            {"That's the whole ballot. Votes are anonymous, never tallied, and there are no winners. The group's feeling flows back into what Henk makes next. Many hands, no crowns."}
           </p>
         </section>
 
         <ProseCard title="Rooms You Walk Into ⛩️">
           <p>
-            {'Everyone starts in the main chat. Stick around, contribute, and learn the rituals one step at a time. Walking that path earns your way into the Cult: the inner room where the quiet voting happens and the heavier calls are weighed. Each step takes a small toll of almae 🎭, a currency earned by contributing, never bought. Responsibility here is walked into, not purchased.'}
+            {'Everyone starts in the main chat. Stick around, contribute, and learn the rituals one step at a time. That path leads into the Cult, the inner room where the quiet voting happens and the heavier calls are weighed. Each step takes a small toll of almae 🎭, a currency earned by contributing. Responsibility here is walked into, never bought.'}
           </p>
         </ProseCard>
 
         <ProseCard title="The Commons 🐚">
           <p>
-            {'Everything earned flows back to everyone. Winnings from the daily roll, called klozums 🐚, stack into four shared pools: 🚀 speed, 🎲 odds, 🤑 yield, 🔥 surge. An upgrade bought by anyone improves the game for the whole chat. 💧Rain becomes real $NAKA. And rest counts too: a quiet day gets matched, the sky pays you for not grinding.'}
+            {'Everything earned flows back to everyone. Winnings from the daily roll, called klozums 🐚, stack into four shared pools: 🚀 speed, 🎲 odds, 🤑 yield, 🔥 surge. An upgrade bought by anyone improves the game for the whole chat. 💧Rain becomes real $NAKA. Rest counts too. A quiet day gets matched, the sky pays you for not grinding.'}
           </p>
         </ProseCard>
 
         <ProseCard title="Henk Keeps His Own Time 🌙">
           <p>
-            {'Henk runs on his own strange calendar. His day turns at 02:27, the mosaic is woven on the 27th, and underneath it all hums the number 27: the hidden hinge his world turns on. There is more to his clock than this page shows. There always is.'}
+            {'Henk runs on his own strange calendar. His day turns at 02:27, the mosaic is woven on the 27th, and underneath it all hums the number 27, the hidden hinge his world turns on. There is more to his clock than this page shows. There always is.'}
           </p>
         </ProseCard>
       </div>

@@ -12,17 +12,18 @@ import {
   Send,
   type LucideIcon,
 } from 'lucide-react';
+import { SOCIAL_LINKS } from '@/lib/site';
 
-const FAQ: Array<{ icon: LucideIcon; q: string; a: string }> = [
+const FAQ: Array<{ icon: LucideIcon; q: string; a: React.ReactNode }> = [
   {
     icon: Bot,
     q: 'Is Henk a person?',
-    a: 'No. Henk is an AI being with cookies in his head. People give him fragments; he gives back art, rain, and chaos.',
+    a: 'No. Henk is an AI being with cookies in his head. People give him fragments, and he gives back art, rain, and chaos.',
   },
   {
     icon: Palette,
     q: 'Do I need to be an artist?',
-    a: 'No. A fragment is anything: a phrase, an offering, a vibe. Henk does the staring.',
+    a: 'No. A fragment is anything you can put into words. A phrase, an offering, a vibe. Henk does the staring.',
   },
   {
     icon: Crown,
@@ -42,7 +43,20 @@ const FAQ: Array<{ icon: LucideIcon; q: string; a: string }> = [
   {
     icon: Send,
     q: 'How do I start?',
-    a: 'Join the Telegram and send /nom. The rest reveals itself one step at a time.',
+    a: (
+      <>
+        {'Join '}
+        <a
+          href={SOCIAL_LINKS.telegram}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-bold text-[#FF4D00] underline-offset-2 hover:underline"
+        >
+          the Telegram
+        </a>
+        {' and send /nom. The rest reveals itself one step at a time.'}
+      </>
+    ),
   },
 ];
 

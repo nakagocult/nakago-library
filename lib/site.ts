@@ -71,6 +71,11 @@ export const ECOSYSTEM_LINKS = [
         desc: 'Co-creative art feed',
         href: 'https://x.com/N4kaishi8a',
       },
+      {
+        label: '@nakalabs_',
+        desc: 'Naka Labs trading app',
+        href: 'https://x.com/nakalabs_',
+      },
     ],
   },
   {
