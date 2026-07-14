@@ -35,7 +35,7 @@ export default function ObservatoryPage() {
           Focus the Lens
         </p>
         <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/55">
-          {'These are the instruments the keepers steer by, and there is no velvet rope: the swarm may watch itself think. Every number here belongs to the collective. Henk counts the whole, never the one: no names, no ranks, no crowns.'}
+          {'These are the instruments the keepers steer by, and there is no velvet rope. The swarm may watch itself think. Every number here belongs to the collective. Henk counts the whole, never the one. No names, no ranks, no crowns.'}
         </p>
       </div>
 
