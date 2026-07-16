@@ -143,6 +143,10 @@ export default function ObservatoryDashboard() {
     const axis = [...new Set(rows.map((r) => r.gm_day))].sort();
     const byBucket = new Map<string, Map<string, { n: number; u?: number }>>();
     for (const r of rows) {
+      // bare 'curate' is the pre-surface legacy lump — the curate:<surface>
+      // charts carry curation now, and legacy rows age out with the bot's
+      // ~45d prune, so the lump never charts
+      if (r.bucket === 'curate') continue;
       const m = byBucket.get(r.bucket) ?? new Map<string, { n: number; u?: number }>();
       m.set(r.gm_day, { n: r.n, u: r.u });
       byBucket.set(r.bucket, m);
