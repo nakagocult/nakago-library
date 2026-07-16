@@ -141,18 +141,24 @@ export default function ObservatoryDashboard() {
   const { eventSparks, ritualSparks } = useMemo(() => {
     const rows = pulse?.events ?? [];
     const axis = [...new Set(rows.map((r) => r.gm_day))].sort();
-    const byBucket = new Map<string, Map<string, number>>();
+    const byBucket = new Map<string, Map<string, { n: number; u?: number }>>();
     for (const r of rows) {
-      const m = byBucket.get(r.bucket) ?? new Map<string, number>();
-      m.set(r.gm_day, r.n);
+      const m = byBucket.get(r.bucket) ?? new Map<string, { n: number; u?: number }>();
+      m.set(r.gm_day, { n: r.n, u: r.u });
       byBucket.set(r.bucket, m);
     }
     const all = [...byBucket.entries()].map(([bucket, m]) => ({
       bucket,
       label: bucketLabel(bucket),
       ritual: ritualName(bucket),
-      total: [...m.values()].reduce((a, b) => a + b, 0),
-      points: axis.map((d) => ({ label: shortDay(d), value: m.get(d) ?? 0 })),
+      total: [...m.values()].reduce((a, b) => a + b.n, 0),
+      points: axis.map((d) => ({
+        label: shortDay(d),
+        value: m.get(d)?.n ?? 0,
+        // the unique-hoomans bar behind the count line; an older pulse
+        // without the field leaves the chart line-only
+        bar: m.get(d)?.u,
+      })),
     }));
     const rituals = all
       .filter((s) => s.ritual !== null)
@@ -342,9 +348,10 @@ export default function ObservatoryDashboard() {
       {/* the macro event chart (was the live ticker) */}
       <Panel title="The Ticker 🧾">
         <p className="mb-3 text-xs leading-relaxed text-white/40">
-          How much of each thing happened, per day. Granted noms chart alone
-          so the rest stays readable, and curation votes chart per surface.
-          Nobody is named, ever.
+          How much of each thing happened, per day. The line counts the doings;
+          the faint bars count how many different hoomans did them. Granted
+          noms chart alone so the rest stays readable, and curation votes
+          chart per surface. Nobody is named, ever.
         </p>
         {eventSparks.length === 0 && ritualSparks.length === 0 ? (
           <p className="text-sm text-white/40">quiet for now, the swarm rests.</p>

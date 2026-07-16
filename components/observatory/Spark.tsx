@@ -4,14 +4,18 @@ import { useRef, useState } from 'react';
 
 // One small time-series, one hue, one axis: the observatory is a wall of
 // these instead of multi-series plots (the metrics live on different scales,
-// and one axis per chart is the rule). Marks per the house chart spec: 2px
-// line, recessive baseline, muted min/max hints in ink (never series color),
-// the latest value direct-labeled, and a full-height crosshair + tooltip on
-// hover with the whole card as the hit target.
+// and one axis per chart is the rule). The one sanctioned second series is a
+// point's `bar` — translucent bars behind the line, SAME unit and axis (the
+// event charts ride it as distinct hoomans, always ≤ the count line), so the
+// one-axis rule holds. Marks per the house chart spec: 2px line, recessive
+// baseline, muted min/max hints in ink (never series color), the latest value
+// direct-labeled, and a full-height crosshair + tooltip on hover with the
+// whole card as the hit target.
 
 export interface SparkPoint {
   label: string;
   value: number | null;
+  bar?: number | null; // companion series on the same axis (e.g. hoomans)
   flag?: boolean; // e.g. a cawf day: ring the dot so the day explains itself
 }
 
@@ -20,6 +24,7 @@ interface SparkProps {
   points: SparkPoint[]; // oldest → newest
   color?: string;
   format?: (v: number) => string;
+  barTitle?: string; // tooltip wording for the bar series
 }
 
 const W = 320;
@@ -31,14 +36,25 @@ function fmtDefault(v: number): string {
   return Number.isInteger(v) ? String(v) : v.toFixed(2);
 }
 
-export default function Spark({ title, points, color = '#FF4D00', format = fmtDefault }: SparkProps) {
+export default function Spark({
+  title,
+  points,
+  color = '#FF4D00',
+  format = fmtDefault,
+  barTitle = 'hoomans',
+}: SparkProps) {
   const [hover, setHover] = useState<number | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
 
   const values = points.map((p) => p.value).filter((v): v is number => v !== null);
+  const bars = points
+    .map((p) => p.bar)
+    .filter((v): v is number => typeof v === 'number');
   const hasData = values.length > 0;
   const min = hasData ? Math.min(...values, 0) : 0;
-  const max = hasData ? Math.max(...values) : 1;
+  // bars share the axis (same unit, bar ≤ value in practice) — still fold
+  // them into the scale so a stray taller bar can never overflow the frame
+  const max = hasData ? Math.max(...values, ...bars) : 1;
   const span = max - min || 1;
 
   const x = (i: number) =>
@@ -100,6 +116,25 @@ export default function Spark({ title, points, color = '#FF4D00', format = fmtDe
         >
           {/* recessive baseline */}
           <line x1={0} x2={W} y1={H - PAD} y2={H - PAD} stroke="rgba(255,255,255,0.08)" strokeWidth={1} />
+          {/* the companion bars sit behind the line, same axis */}
+          {points.map((p, i) => {
+            if (typeof p.bar !== 'number' || p.bar <= 0) return null;
+            const step = points.length > 1 ? (W - PAD * 2) / (points.length - 1) : W;
+            const bw = Math.min(12, step * 0.6);
+            const y0 = y(Math.max(min, 0));
+            return (
+              <rect
+                key={`b${i}`}
+                x={x(i) - bw / 2}
+                y={y(p.bar)}
+                width={bw}
+                height={Math.max(0, y0 - y(p.bar))}
+                fill={color}
+                fillOpacity={0.25}
+                rx={1}
+              />
+            );
+          })}
           {segments.map((seg, i) => (
             <polyline
               key={i}
@@ -153,6 +188,9 @@ export default function Spark({ title, points, color = '#FF4D00', format = fmtDe
             {hoverPoint.label}
             {' : '}
             {hoverPoint.value === null ? 'no data' : format(hoverPoint.value)}
+            {typeof hoverPoint.bar === 'number'
+              ? ` · ${format(hoverPoint.bar)} ${barTitle}`
+              : ''}
             {hoverPoint.flag ? ' 🌱' : ''}
           </div>
         )}

@@ -91,11 +91,14 @@ export interface PoolState {
   levels: Record<string, number>;
 }
 
-/** One cell of the macro event chart: how many of `bucket` on `gm_day`. */
+/** One cell of the macro event chart: how many of `bucket` on `gm_day`,
+ * and how many distinct hoomans (`u`) were behind them. `u` is optional so
+ * a pulse from a bot older than the field still charts, line-only. */
 export interface EventDayCount {
   gm_day: string;
   bucket: string;
   n: number;
+  u?: number;
 }
 
 /** One rung of the way funnel: hoomans who have walked `step` (all time). */
