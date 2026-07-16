@@ -143,10 +143,12 @@ export const BUCKET_LABELS: Record<string, string> = {
   ritual: 'other rituals',
   ritual_denied: 'gate refusals',
   callback: 'other buttons',
-  curate: 'curation votes',
   step: 'steps walked',
   raid: 'raids',
 };
+// NB: bare 'curate' (the pre-surface legacy lump) stays in KNOWN_KINDS so it
+// can never masquerade as a ritual, but the dashboard drops it from the grid
+// — the curate:<surface> charts carry curation now.
 
 /** Bucket → wording, including the dynamic curation-per-surface buckets
  * ("curate:stories" → "curation · stories") and the ritual buckets
