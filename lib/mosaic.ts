@@ -27,11 +27,14 @@ export interface MosaicTile {
   row: number;
   col: number;
   file: string; // bare "tile_<r>_<c>.png", resolved against the cycle base
-  fragment?: string;
+  fragment?: string | null;
   hooman_id?: string | number | null;
   username?: string | null;
   created_at?: string;
   failed?: boolean;
+  // a henk filler tile padding the grid to a full rectangle — blended from
+  // sampled cycle fragments, no hooman attribution (fragment/username null)
+  filler?: boolean;
 }
 
 export interface MosaicManifest {
