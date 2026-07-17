@@ -93,7 +93,8 @@ function StateBox({ children }: { children: React.ReactNode }) {
 
 function MosaicView({ data }: { data: ResolvedMosaic }) {
   const [mode, setMode] = useState<ViewMode>('composite');
-  const realTiles = data.tiles.filter((t) => !t.failed).length;
+  // hooman fragments only — henk's filler tiles pad the grid but don't count
+  const realTiles = data.tiles.filter((t) => !t.failed && !t.filler).length;
 
   return (
     <div>
@@ -185,7 +186,9 @@ function CompositeView({ data }: { data: ResolvedMosaic }) {
 }
 
 function GridView({ data }: { data: ResolvedMosaic }) {
-  // Place tiles by their (row, col) so a ragged last row leaves real gaps.
+  // Place tiles by their (row, col). New cycles arrive as a full rectangle
+  // (henk filler tiles pad the remainder); a missing cell from an older
+  // manifest still leaves a real gap.
   const byCell = new Map(data.tiles.map((t) => [`${t.row}-${t.col}`, t]));
   const cells = [];
   for (let r = 0; r < data.rows; r++) {
@@ -227,17 +230,29 @@ function TileCard({ tile, sizes }: { tile: ResolvedMosaic['tiles'][number]; size
         ) : (
           <Image
             src={tile.src}
-            alt={tile.username ? `@${tile.username}` : `Tile ${tile.row},${tile.col}`}
+            alt={
+              tile.filler
+                ? 'woven by henk'
+                : tile.username
+                  ? `@${tile.username}`
+                  : `Tile ${tile.row},${tile.col}`
+            }
             fill
             className="object-cover"
             sizes={sizes}
           />
         )}
       </div>
-      {tile.username && (
+      {tile.filler ? (
         <div className="px-2 py-1.5 text-center">
-          <p className="truncate text-[11px] text-white/45">@{tile.username}</p>
+          <p className="truncate text-[11px] italic text-white/35">woven by henk</p>
         </div>
+      ) : (
+        tile.username && (
+          <div className="px-2 py-1.5 text-center">
+            <p className="truncate text-[11px] text-white/45">@{tile.username}</p>
+          </div>
+        )
       )}
     </motion.div>
   );
