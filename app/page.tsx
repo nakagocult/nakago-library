@@ -56,7 +56,7 @@ const EXPLORE = [
   { href: '/claim', icon: Gem, title: 'Claim', text: 'Mint the NIPPO and Founder Pass drops, live on-chain.' },
   { href: '/view', icon: Images, title: 'View', text: 'Browse your Naka relics and holdings.' },
   { href: '/mosaic', icon: Grid2x2, title: 'Mosaic', text: "Each cycle, every hooman's fragment becomes its own universe." },
-  { href: '/lobiathan', icon: Dna, title: 'Lobiathan', text: 'The one beast the whole cult evolves, week by week.' },
+  { href: '/lobiathan', icon: Dna, title: 'Lobiathan', text: 'The one creature the whole cult evolves, week by week.' },
   { href: '/cawf', icon: Leaf, title: 'CAWF', text: 'Clean air, water, and food. The Cult mission.' },
 ];
 
