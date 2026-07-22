@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, AlertTriangle, Sparkles } from 'lucide-react';
+import { Dna, Loader2, AlertTriangle, Sparkles } from 'lucide-react';
 import { loadLobiathanHistory, formatWeek, type LobiathanWeek } from '@/lib/lobiathan';
 
 export default function LobiathanPage() {
@@ -17,22 +17,23 @@ export default function LobiathanPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-      {/* Header — this page carries the lobiathan's own wordmark in place of the
-          usual icon tile + gradient title; an sr-only h1 keeps the accessible
-          title. The mark's black ground melts into the site background, so it
-          floats like the other header tiles rather than sitting in a frame. */}
+      {/* Header */}
       <div className="mb-12 text-center">
-        <h1 className="sr-only">LOBIATHAN</h1>
         <motion.div
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 4, repeat: Infinity }}
-          className="mx-auto max-w-md overflow-hidden rounded-2xl sm:max-w-lg"
-          style={{ boxShadow: '0 0 45px rgba(255,77,0,0.12)' }}
+          className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl"
+          style={{ background: '#111', border: '1px solid rgba(255,77,0,0.3)', boxShadow: '0 0 30px rgba(255,77,0,0.2)' }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/lobiathan-wordmark.webp" alt="LOBIATHAN" className="w-full" />
+          <Dna className="h-8 w-8 text-[#FF4D00]" />
         </motion.div>
-        <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-white/45">
+        <h1
+          className="text-5xl font-black leading-none text-white md:text-6xl"
+          style={{ fontFamily: 'Akihabored, Bebas Neue, Impact, sans-serif', letterSpacing: '0.04em' }}
+        >
+          <span className="text-gradient-fire">LOBIATHAN</span>
+        </h1>
+        <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/45">
           One creature, grown by the whole cult. Every offering whispered to henk feeds it;
           once a week he weaves them into the lobiathan&apos;s next form.
           This is its whole life, first form to now.
