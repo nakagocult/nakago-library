@@ -11,6 +11,7 @@ export const NAV_LINKS = [
   { href: '/claim', label: 'Claim' },
   { href: '/view', label: 'View' },
   { href: '/mosaic', label: 'Mosaic' },
+  { href: '/lobiathan', label: 'Lobiathan' },
   { href: '/cawf', label: 'CAWF' },
 ] as const;
 
