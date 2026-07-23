@@ -12,6 +12,7 @@ export const NAV_LINKS = [
   { href: '/view', label: 'View' },
   { href: '/mosaic', label: 'Mosaic' },
   { href: '/lobiathan', label: 'Lobiathan' },
+  { href: '/memoires', label: 'Memoires' },
   { href: '/cawf', label: 'CAWF' },
 ] as const;
 
